@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 100;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px #aaa;
+            background-color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        /* Light colors based on color psychology */
+        #calories {
+            background-color: #ffe0b2; /* Light cyan for refreshment */
+        }
+        #sleep {
+            background-color: #e1bee7; /* Light amber for comfort */
+        }
+        #medicines {
+            background-color: #d4edda; /* Light pink for care */
+        }
+        #water {
+            background-color: #e0f7fa; /* Light purple for calmness */
+        }
+        #agenda {
+            background-color: #ffe0b2; /* Light amber for clarity */
+        }
+        
+        
+        .journal, #thankful, #lessons, #sucked, #improvement, #accomplishments {
+            background-color: #e1f5fe; /* Light blue for serenity */
+            border: 1px solid #0288d1;
+            border-radius: 5px;
+            height: 150px; /* Fixed height for text boxes */
+            resize: none;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Daily Summary</h2>
+        <input type="date" id="date" onchange="loadSummary()" />
+        
+         <div>
+            <h3>Sleep Hours:</h3>
+            <input type="number" id="sleep" />
+        </div>
+        
+        
+        
+                <div>
+            <h3>Water Intake (L):</h3>
+            <input type="number" id="water" step="0.1" />
+        </div>
+        
+        <div>
+            <h3>Today's Calories:</h3>
+            <input type="number" id="calories" />
+        </div>
+       
+        <div>
+            <h3>Medicines Taken:</h3>
+           <textarea id="medicines" rows="3"></textarea>
+        </div>
+
+        <div>
+            <h3>Today's Agenda:</h3>
+            <textarea id="agenda" rows="6"></textarea>
+        </div>
+
+        <div>
+            <h3>Today I am thankful for:</h3>
+            <textarea id="thankful" rows="3"></textarea>
+        </div>
+
+
+        <div>
+            <h3>Today's Journal and Reflections:</h3>
+            <textarea id="journal" class="journal" rows="6"></textarea>
+        </div>
+
+        <div>
+            <h3>Today's Lessons:</h3>
+            <textarea id="lessons" rows="3"></textarea>
+        </div>
+          <div>
+            <h3>Accomplishments / Completed Tasks:</h3>
+            <textarea id="accomplishments" rows="3"></textarea>
+        </div>
+        
+        <div>
+            <h3>Things that sucked:</h3>
+            <textarea id="sucked" rows="3"></textarea>
+        </div>
+        <div>
+            <h3>Areas for Improvement:</h3>
+            <textarea id="improvement" rows="3"></textarea>
+        </div>
+      
+        <button onclick="saveSummary()">Save Summary</button>
+        <button onclick="downloadPDF()">Download PDF</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Load summary from local storage for the selected date
+        function loadSummary() {
+            const selectedDate = document.getElementById('date').value;
+            const summaryData = JSON.parse(localStorage.getItem(selectedDate)) || {};
+
+            // Clear input fields
+            document.getElementById('calories').value = summaryData.calories || '';
+            document.getElementById('sleep').value = summaryData.sleep || '';
+            document.getElementById('medicines').value = summaryData.medicines || '';
+            document.getElementById('water').value = summaryData.water || '';
+            document.getElementById('agenda').value = summaryData.agenda || '';
+            document.getElementById('journal').value = summaryData.journal || '';
+            document.getElementById('thankful').value = summaryData.thankful || '';
+            document.getElementById('lessons').value = summaryData.lessons || '';
+            document.getElementById('sucked').value = summaryData.sucked || '';
+            document.getElementById('improvement').value = summaryData.improvement || '';
+            document.getElementById('accomplishments').value = summaryData.accomplishments || '';
+        }
+
+        // Save summary data to local storage
+        function saveSummary() {
+            const selectedDate = document.getElementById('date').value;
+            const summaryData = {
+                calories: document.getElementById('calories').value,
+                sleep: document.getElementById('sleep').value,
+                medicines: document.getElementById('medicines').value,
+                water: document.getElementById('water').value,
+                agenda: document.getElementById('agenda').value,
+                journal: document.getElementById('journal').value,
+                thankful: document.getElementById('thankful').value,
+                lessons: document.getElementById('lessons').value,
+                sucked: document.getElementById('sucked').value,
+                improvement: document.getElementById('improvement').value,
+                accomplishments: document.getElementById('accomplishments').value,
+            };
+            localStorage.setItem(selectedDate, JSON.stringify(summaryData));
+            alert('Summary saved!');
+        }
+
+// Download summary as PDF
+function downloadPDF() {
+    const selectedDate = document.getElementById('date').value;
+    const calories = document.getElementById('calories').value;
+    const sleep = document.getElementById('sleep').value;
+    const medicines = document.getElementById('medicines').value;
+    const water = document.getElementById('water').value;
+    const agenda = document.getElementById('agenda').value;
+    const journal = document.getElementById('journal').value;
+    const thankful = document.getElementById('thankful').value;
+    const lessons = document.getElementById('lessons').value;
+    const sucked = document.getElementById('sucked').value;
+    const improvement = document.getElementById('improvement').value;
+    const accomplishments = document.getElementById('accomplishments').value;
+
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    let y = 20; // Starting Y position
+
+    // Helper function to add text to the PDF with line breaks
+    const addTextWithLineBreaks = (text, yPosition, isHeading = false) => {
+        // If it's a heading, set color and style
+
+
+        const lines = doc.splitTextToSize(text, 180); // 180 is the width for line wrapping
+        lines.forEach((line, index) => {
+            if (yPosition + (index * 10) > 280) { // Check if the line exceeds the bottom margin
+                doc.addPage(); // Create a new page
+                yPosition = 20; // Reset Y position for new page
+            }
+            doc.text(20, yPosition + (index * 10), line);
+        });
+        return yPosition + (lines.length * 10); // Return the new Y position
+    };
+
+    // Add headings and corresponding text
+    y = addTextWithLineBreaks(`Daily Summary for ${selectedDate}`, y, true);
+    y = addTextWithLineBreaks(`Sleep Hours: ${sleep}`, y);
+    y = addTextWithLineBreaks(`Water Intake: ${water} L`, y);
+    y = addTextWithLineBreaks(`Today's Calories: ${calories}`, y);
+
+    y = addTextWithLineBreaks(`Medicines Taken: ${medicines}`, y);
+
+y = addTextWithLineBreaks(`Today I am thankful for: ${thankful}`, y);
+
+    y = addTextWithLineBreaks(`Today's Agenda: ${agenda}`, y);
+    
+    y = addTextWithLineBreaks(`Today's Journal and Reflections: ${journal}`, y);
+    
+    y = addTextWithLineBreaks(`Today's Lessons: ${lessons}`, y);
+    
+       
+   y = addTextWithLineBreaks(`Accomplishments / Completed Tasks: ${accomplishments}`, y);
+    y = addTextWithLineBreaks(`Things that sucked: ${sucked}`, y);
+    y = addTextWithLineBreaks(`Areas for Improvement: ${improvement}`, y);
+
+
+    doc.save(`Daily_Summary_${selectedDate}.pdf`);
+}
+    </script>
+</body>
+</html>
