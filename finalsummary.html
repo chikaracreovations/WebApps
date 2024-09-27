@@ -47,6 +47,9 @@
             background-color: #ffe0b2; /* Light amber for clarity */
         }
         
+        #screenTime {
+          background-color: #ffebee; 
+        }
         
         .journal, #thankful, #lessons, #sucked, #improvement, #accomplishments {
             background-color: #e1f5fe; /* Light blue for serenity */
@@ -79,9 +82,7 @@
             <input type="number" id="sleep" />
         </div>
         
-        
-        
-                <div>
+        <div>
             <h3>Water Intake (L):</h3>
             <input type="number" id="water" step="0.1" />
         </div>
@@ -92,8 +93,13 @@
         </div>
        
         <div>
+            <h3>Screen Time (hours):</h3>
+            <input type="number" id="screenTime" step="0.1" />
+        </div>
+
+        <div>
             <h3>Medicines Taken:</h3>
-           <textarea id="medicines" rows="3"></textarea>
+            <textarea id="medicines" rows="3"></textarea>
         </div>
 
         <div>
@@ -106,7 +112,6 @@
             <textarea id="thankful" rows="3"></textarea>
         </div>
 
-
         <div>
             <h3>Today's Journal and Reflections:</h3>
             <textarea id="journal" class="journal" rows="6"></textarea>
@@ -116,7 +121,7 @@
             <h3>Today's Lessons:</h3>
             <textarea id="lessons" rows="3"></textarea>
         </div>
-          <div>
+        <div>
             <h3>Accomplishments / Completed Tasks:</h3>
             <textarea id="accomplishments" rows="3"></textarea>
         </div>
@@ -155,6 +160,7 @@
             document.getElementById('sucked').value = summaryData.sucked || '';
             document.getElementById('improvement').value = summaryData.improvement || '';
             document.getElementById('accomplishments').value = summaryData.accomplishments || '';
+            document.getElementById('screenTime').value = summaryData.screenTime || ''; // Load screen time
         }
 
         // Save summary data to local storage
@@ -172,18 +178,21 @@
                 sucked: document.getElementById('sucked').value,
                 improvement: document.getElementById('improvement').value,
                 accomplishments: document.getElementById('accomplishments').value,
+                screenTime: document.getElementById('screenTime').value, // Save screen time
             };
             localStorage.setItem(selectedDate, JSON.stringify(summaryData));
             alert('Summary saved!');
         }
 
-// Download summary as PDF
+        // Download summary as PDF
+        // Download summary as PDF
 function downloadPDF() {
     const selectedDate = document.getElementById('date').value;
     const calories = document.getElementById('calories').value;
     const sleep = document.getElementById('sleep').value;
     const medicines = document.getElementById('medicines').value;
     const water = document.getElementById('water').value;
+    const screenTime = document.getElementById('screenTime').value; // Add screen time
     const agenda = document.getElementById('agenda').value;
     const journal = document.getElementById('journal').value;
     const thankful = document.getElementById('thankful').value;
@@ -193,47 +202,76 @@ function downloadPDF() {
     const accomplishments = document.getElementById('accomplishments').value;
 
     const doc = new jsPDF();
-    doc.setFontSize(12);
+    doc.setFontSize(16);
     let y = 20; // Starting Y position
+    const pageHeight = doc.internal.pageSize.height; // Page height
+    const margin = 20; // Margin from top and bottom
 
-    // Helper function to add text to the PDF with line breaks
-    const addTextWithLineBreaks = (text, yPosition, isHeading = false) => {
-        // If it's a heading, set color and style
-
-
-        const lines = doc.splitTextToSize(text, 180); // 180 is the width for line wrapping
-        lines.forEach((line, index) => {
-            if (yPosition + (index * 10) > 280) { // Check if the line exceeds the bottom margin
-                doc.addPage(); // Create a new page
-                yPosition = 20; // Reset Y position for new page
-            }
-            doc.text(20, yPosition + (index * 10), line);
-        });
-        return yPosition + (lines.length * 10); // Return the new Y position
+    // Helper function to add text with custom formatting
+    const addHeading = (text, yPosition) => {
+        doc.setFontSize(14); // Increased size for headings
+        doc.setFont('bold');
+        doc.text(text, 20, yPosition);
+        doc.setFontSize(12); // Reset to regular size
+        return yPosition + 10; // Add spacing after heading
     };
 
-    // Add headings and corresponding text
-    y = addTextWithLineBreaks(`Daily Summary for ${selectedDate}`, y, true);
-    y = addTextWithLineBreaks(`Sleep Hours: ${sleep}`, y);
-    y = addTextWithLineBreaks(`Water Intake: ${water} L`, y);
-    y = addTextWithLineBreaks(`Today's Calories: ${calories}`, y);
+    const addText = (text, yPosition) => {
+        const lines = doc.splitTextToSize(text, 180);
+        lines.forEach((line) => {
+            if (yPosition >= pageHeight - margin) { // Check if new page is needed
+                doc.addPage();
+                yPosition = margin; // Reset position after adding new page
+            }
+            doc.text(line, 20, yPosition);
+            yPosition += 10; // Add spacing for each line
+        });
+        return yPosition;
+    };
 
-    y = addTextWithLineBreaks(`Medicines Taken: ${medicines}`, y);
-
-y = addTextWithLineBreaks(`Today I am thankful for: ${thankful}`, y);
-
-    y = addTextWithLineBreaks(`Today's Agenda: ${agenda}`, y);
+    // Add content to the PDF
+    y = addHeading(`Daily Summary for ${selectedDate}`, y);
+    y = addHeading(`Sleep Hours:`, y);
+    y = addText(sleep, y);
     
-    y = addTextWithLineBreaks(`Today's Journal and Reflections: ${journal}`, y);
+    y = addHeading(`Water Intake:`, y);
+    y = addText(`${water} L`, y);
     
-    y = addTextWithLineBreaks(`Today's Lessons: ${lessons}`, y);
+    y = addHeading(`Today's Calories:`, y);
+    y = addText(calories, y);
     
-       
-   y = addTextWithLineBreaks(`Accomplishments / Completed Tasks: ${accomplishments}`, y);
-    y = addTextWithLineBreaks(`Things that sucked: ${sucked}`, y);
-    y = addTextWithLineBreaks(`Areas for Improvement: ${improvement}`, y);
+    y = addHeading(`Medicines Taken:`, y);
+    y = addText(medicines, y);
+
+    
+    y = addHeading(`Screen Time:`, y);
+    y = addText(`${screenTime} hours`, y);
 
 
+    y = addHeading(`Today's Agenda:`, y);
+    y = addText(agenda, y);
+
+    y = addHeading(`Thankful For:`, y);
+    y = addText(thankful, y);
+
+    y = addHeading(`Today's Journal:`, y);
+    y = addText(journal, y);
+
+    y = addHeading(`Today's Lessons:`, y);
+    y = addText(lessons, y);
+    
+    y = addHeading(`Accomplishments:`, y);
+    y = addText(accomplishments, y);
+
+    y = addHeading(`Things that Sucked:`, y);
+    y = addText(sucked, y);
+
+    y = addHeading(`Areas for Improvement:`, y);
+    y = addText(improvement, y);
+
+
+
+    // Save the PDF
     doc.save(`Daily_Summary_${selectedDate}.pdf`);
 }
     </script>
