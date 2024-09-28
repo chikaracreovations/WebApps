@@ -227,12 +227,25 @@ function downloadPDF() {
             if (yPosition >= pageHeight - margin) { // Check if new page is needed
                 doc.addPage();
                 yPosition = margin; // Reset position after adding new page
+                addPageNumber(doc.internal.getNumberOfPages());
             }
             doc.text(line, margin, yPosition); // Use margin for positioning
             yPosition += 10; // Add spacing for each line
         });
         return yPosition;
     };
+    // Add page number at the bottom
+const addPageNumber = (pageNum) => {
+    doc.setFontSize(10);
+    doc.text(`Page ${pageNum}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+};
+
+const addHyperlink = (text, url, yPosition) => {
+    doc.textWithLink(text, margin, yPosition, { url: url });
+    return yPosition + 10;
+};
+
+
 
     // Add content to the PDF
     y = addHeading(`Daily Summary for ${selectedDate}`, y);
@@ -250,43 +263,60 @@ function downloadPDF() {
 
     
     y = addHeading(`Screen Time:`, y);
-    y = addText(`${screenTime} hours`, y);
+    addPageNumber(doc.internal.getNumberOfPages());
 
+    y = addText(`${screenTime} hours`, y);
+    
     // Start a new page for each section from here on
     doc.addPage();
     y = margin; // Reset y position for the new page
     y = addHeading(`Today's Agenda:`, y);
+   addPageNumber(doc.internal.getNumberOfPages());
     y = addText(agenda, y);
+    
 
     doc.addPage();
     y = margin;
     y = addHeading(`Thankful For:`, y);
+    addPageNumber(doc.internal.getNumberOfPages());
     y = addText(thankful, y);
+    
 
     doc.addPage();
     y = margin;
     y = addHeading(`Today's Journal:`, y);
+    addPageNumber(doc.internal.getNumberOfPages());
     y = addText(journal, y);
+    
 
     doc.addPage();
     y = margin;
     y = addHeading(`Today's Lessons:`, y);
+    addPageNumber(doc.internal.getNumberOfPages());
+    
     y = addText(lessons, y);
     
     doc.addPage();
     y = margin;
     y = addHeading(`Accomplishments:`, y);
+    addPageNumber(doc.internal.getNumberOfPages());
     y = addText(accomplishments, y);
+    
 
     doc.addPage();
     y = margin;
-    y = addHeading(`Things that Sucked:`, y);
+    y = addHeading(`Things that Sucked:`, y); 
+    addPageNumber(doc.internal.getNumberOfPages());
     y = addText(sucked, y);
+
 
     doc.addPage();
     y = margin;
     y = addHeading(`Areas for Improvement:`, y);
+    addPageNumber(doc.internal.getNumberOfPages());
     y = addText(improvement, y);
+    
+    
 
     // Save the PDF
     doc.save(`Daily_Summary_${selectedDate}.pdf`);
