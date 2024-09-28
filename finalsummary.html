@@ -208,25 +208,27 @@ function downloadPDF() {
     doc.setFontSize(16);
     let y = 20; // Starting Y position
     const pageHeight = doc.internal.pageSize.height; // Page height
-    const margin = 20; // Margin from top and bottom
+    const pageWidth = doc.internal.pageSize.width; // Page width
+    const margin = 20; // Margin from left and right
+    const textWidth = pageWidth - 2 * margin; // Adjusted text width
 
     // Helper function to add text with custom formatting
     const addHeading = (text, yPosition) => {
         doc.setFontSize(14); // Increased size for headings
         doc.setFont('bold');
-        doc.text(text, 20, yPosition);
+        doc.text(text, margin, yPosition); // Use margin for positioning
         doc.setFontSize(12); // Reset to regular size
         return yPosition + 10; // Add spacing after heading
     };
 
     const addText = (text, yPosition) => {
-        const lines = doc.splitTextToSize(text, 180);
+        const lines = doc.splitTextToSize(text, textWidth); // Use adjusted text width
         lines.forEach((line) => {
             if (yPosition >= pageHeight - margin) { // Check if new page is needed
                 doc.addPage();
                 yPosition = margin; // Reset position after adding new page
             }
-            doc.text(line, 20, yPosition);
+            doc.text(line, margin, yPosition); // Use margin for positioning
             yPosition += 10; // Add spacing for each line
         });
         return yPosition;
