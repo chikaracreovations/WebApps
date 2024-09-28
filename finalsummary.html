@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Daily Summary</title>
     <style>
         body {
@@ -11,7 +12,7 @@
             background-color: #f4f4f4;
         }
         .container {
-            max-width: 100;
+            max-width: 600px;
             margin: auto;
             border: 1px solid #ccc;
             padding: 20px;
@@ -101,6 +102,8 @@
             <h3>Medicines Taken:</h3>
             <textarea id="medicines" rows="3"></textarea>
         </div>
+
+
 
         <div>
             <h3>Today's Agenda:</h3>
@@ -192,7 +195,7 @@ function downloadPDF() {
     const sleep = document.getElementById('sleep').value;
     const medicines = document.getElementById('medicines').value;
     const water = document.getElementById('water').value;
-    const screenTime = document.getElementById('screenTime').value; // Add screen time
+    const screenTime = document.getElementById('screenTime').value; 
     const agenda = document.getElementById('agenda').value;
     const journal = document.getElementById('journal').value;
     const thankful = document.getElementById('thankful').value;
@@ -247,33 +250,46 @@ function downloadPDF() {
     y = addHeading(`Screen Time:`, y);
     y = addText(`${screenTime} hours`, y);
 
-
+    // Start a new page for each section from here on
+    doc.addPage();
+    y = margin; // Reset y position for the new page
     y = addHeading(`Today's Agenda:`, y);
     y = addText(agenda, y);
 
+    doc.addPage();
+    y = margin;
     y = addHeading(`Thankful For:`, y);
     y = addText(thankful, y);
 
+    doc.addPage();
+    y = margin;
     y = addHeading(`Today's Journal:`, y);
     y = addText(journal, y);
 
+    doc.addPage();
+    y = margin;
     y = addHeading(`Today's Lessons:`, y);
     y = addText(lessons, y);
     
+    doc.addPage();
+    y = margin;
     y = addHeading(`Accomplishments:`, y);
     y = addText(accomplishments, y);
 
+    doc.addPage();
+    y = margin;
     y = addHeading(`Things that Sucked:`, y);
     y = addText(sucked, y);
 
+    doc.addPage();
+    y = margin;
     y = addHeading(`Areas for Improvement:`, y);
     y = addText(improvement, y);
-
-
 
     // Save the PDF
     doc.save(`Daily_Summary_${selectedDate}.pdf`);
 }
+
     </script>
 </body>
 </html>
