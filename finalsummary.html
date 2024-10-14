@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <title>Daily Summary</title>
     <style>
         body {
@@ -23,6 +26,11 @@
         h2 {
             text-align: center;
             color: #333;
+        }
+          h4 {
+            font-size: 12px;
+            color: gray;
+            font-style: italic;
         }
         input[type="text"], input[type="number"], input[type="date"], textarea {
             width: 90%;
@@ -51,6 +59,9 @@
         #screenTime {
           background-color: #ffebee; 
         }
+        #habits {
+          background-color: #12334667
+        }
         
         .journal, #thankful, #lessons, #sucked, #improvement, #accomplishments {
             background-color: #e1f5fe; /* Light blue for serenity */
@@ -71,6 +82,32 @@
         button:hover {
             background-color: #218838;
         }
+        .day-checkboxes {
+    display: flex;
+    gap: 10px;
+}
+
+.circle {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    text-align: center;
+    line-height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked + .circle {
+    background-color: #4CAF50; /* Change to desired color */
+    color: white;
+}
     </style>
 </head>
 <body>
@@ -78,19 +115,36 @@
         <h2>Daily Summary</h2>
         <input type="date" id="date" onchange="loadSummary()" />
         
-         <div>
-            <h3>Sleep Hours:</h3>
-            <input type="number" id="sleep" />
-        </div>
-        
+<div>
+    <h3>Sleep Hours:</h3>
+    <input type="number" id="sleep" placeholder="Total Sleep Hours" />
+</div>
+<div>
+    <h3>Sleep Start Time:</h3>
+    <input type="time" id="sleepStart" />
+</div>
+<div>
+    <h3>Sleep End Time:</h3>
+    <input type="time" id="sleepEnd" />
+</div>
         <div>
-            <h3>Water Intake (L):</h3>
+            <h3>Water Intake (ml):</h3>
             <input type="number" id="water" step="0.1" />
         </div>
         
         <div>
             <h3>Today's Calories:</h3>
             <input type="number" id="calories" />
+    <button onclick="openHealthifyApp()" style="background-color: peachpuff;
+    color: dimgrey; border: 1px solid #ccc; padding: 7px 7px; font-size: 10px; cursor: pointer;">
+        Open Healthify
+    </button>
+        </div>
+        
+        
+                <div>
+            <h3>Today's Habits:</h3>
+            <input type="number" id="habits" placeholder="No. Of Habits Completed "/>
         </div>
        
         <div>
@@ -100,100 +154,207 @@
 
         <div>
             <h3>Medicines Taken:</h3>
-            <textarea id="medicines" rows="3"></textarea>
+             <input type="number" id="medicinescount" placeholder="Enter the number of medicines taken">
+            <textarea id="medicines" rows="3"
+             placeholder="Enter the names of the medicines taken"
+            ></textarea>
+            
         </div>
+        
+        <div>
+          <h3> Workout Duration (Minutes): </h3>
+          <input type ="number" id ="workouthours" placeholder ="Enter Workout Duration in Hours"></input>
+          
+        </div>
+        <div>
+    <h4>Select Workout Days</h4>
+    <div class="day-checkboxes">
+        <label>
+            <input type="checkbox" id="monday">
+            <span class="circle">M</span>
+        </label>
+        <label>
+            <input type="checkbox" id="tuesday">
+            <span class="circle">T</span>
+        </label>
+        <label>
+            <input type="checkbox" id="wednesday">
+            <span class="circle">W</span>
+        </label>
+        <label>
+            <input type="checkbox" id="thursday">
+            <span class="circle">T</span>
+        </label>
+        <label>
+            <input type="checkbox" id="friday">
+            <span class="circle">F</span>
+        </label>
+        <label>
+            <input type="checkbox" id="saturday">
+            <span class="circle">S</span>
+        </label>
+        <label>
+            <input type="checkbox" id="sunday">
+            <span class="circle">S</span>
+        </label>
+    </div>
+    
+     <br>
+ <!-- Button to open the app -->
+    <button class="open-app-btn" onclick="openFitNotes()"
+    style="background-color: lightgray;
+    color: dimgrey; border: 1px solid #ccc; padding: 3px 3px; font-size: 10px; cursor: pointer;">Open FitNotes</button>
+</div>
+
 
 
 
         <div>
-            <h3>Today's Agenda:</h3>
+            <h3>Today's Agenda/To- Do List:</h3>
             <textarea id="agenda" rows="6"></textarea>
         </div>
 
         <div>
             <h3>Today I am thankful for:</h3>
-            <textarea id="thankful" rows="3"></textarea>
+            <h4> (Gratitude Journaling ) </h4>
+            <textarea id="thankful" rows="3"
+            placeholder = "What are three things that I am grateful for today?"
+            ></textarea>
         </div>
 
         <div>
             <h3>Today's Journal and Reflections:</h3>
-            <textarea id="journal" class="journal" rows="6"></textarea>
+            <h4> (Feelings Journal)</h4>
+            <textarea id="journal" class="journal" rows="6"
+            placeholder = 
+  "What were the highlights of my day?
+  
+How did I feel today, and what influenced those feelings?
+
+What steps did I take today to work towards my goals?"
+
+            ></textarea>
         </div>
 
         <div>
             <h3>Today's Lessons:</h3>
-            <textarea id="lessons" rows="3"></textarea>
+            <textarea id="lessons" rows="3"
+            placeholder = "What new insights or lessons did I learn today?"
+            ></textarea>
         </div>
         <div>
             <h3>Accomplishments / Completed Tasks:</h3>
-            <textarea id="accomplishments" rows="3"></textarea>
+            <textarea id="accomplishments" rows="3" placeholder= "What did I achieve today, no matter how small?"
+            ></textarea>
         </div>
         
         <div>
             <h3>Things that sucked:</h3>
-            <textarea id="sucked" rows="3"></textarea>
-        </div>
+             <textarea id="sucked" rows="3" placeholder="What challenges or setbacks did I face today?"></textarea>
+            </div>
+        
         <div>
             <h3>Areas for Improvement:</h3>
-            <textarea id="improvement" rows="3"></textarea>
+            <textarea id="improvement" rows="3" placeholder =
+"What could I have done differently today?
+
+What is one thing I can work on for tomorrow?
+
+What mistakes did I make today, and what can I learn from them?"
+            ></textarea>
         </div>
       
-        <button onclick="saveSummary()">Save Summary</button>
-        <button onclick="downloadPDF()">Download PDF</button>
-    </div>
+
+
+     <input type="file" accept=".json" onchange="importSummary(event)" style="font-size: 10px; cursor: pointer; display: inline-block;" />      
+   <button onclick="exportSummary()" style="background-color: black; color: white; border: 1px solid #ccc; padding: 8px 8px; font-size: 10px; cursor: pointer; display: inline-block;">
+    Export Summary
+</button>
+        <br>
+        
+<button onclick="saveSummary()">Save Summary</button>
+<button onclick="downloadPDF()">Download PDF</button>
+        
+
+
+
+        
+
+
+ </div>
+    
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
         const { jsPDF } = window.jspdf;
 
         // Load summary from local storage for the selected date
-        function loadSummary() {
-            const selectedDate = document.getElementById('date').value;
-            const summaryData = JSON.parse(localStorage.getItem(selectedDate)) || {};
 
-            // Clear input fields
-            document.getElementById('calories').value = summaryData.calories || '';
-            document.getElementById('sleep').value = summaryData.sleep || '';
-            document.getElementById('medicines').value = summaryData.medicines || '';
-            document.getElementById('water').value = summaryData.water || '';
-            document.getElementById('agenda').value = summaryData.agenda || '';
-            document.getElementById('journal').value = summaryData.journal || '';
-            document.getElementById('thankful').value = summaryData.thankful || '';
-            document.getElementById('lessons').value = summaryData.lessons || '';
-            document.getElementById('sucked').value = summaryData.sucked || '';
-            document.getElementById('improvement').value = summaryData.improvement || '';
-            document.getElementById('accomplishments').value = summaryData.accomplishments || '';
-            document.getElementById('screenTime').value = summaryData.screenTime || ''; // Load screen time
-        }
+function loadSummary() {
+    const selectedDate = document.getElementById('date').value;
+    const summaryData = JSON.parse(localStorage.getItem(selectedDate)) || {};
+
+    // Clear input fields
+    document.getElementById('calories').value = summaryData.calories || '';
+    document.getElementById('sleep').value = summaryData.sleep || ''; // Total Sleep Hours
+    document.getElementById('sleepStart').value = summaryData.sleepStart || ''; // Sleep Start Time
+    document.getElementById('sleepEnd').value = summaryData.sleepEnd || ''; // Sleep End Time
+    document.getElementById('habits').value = summaryData.habits || '';
+    document.getElementById('medicines').value = summaryData.medicines || '';
+   document.getElementById('medicinescount').value = summaryData.medicinescount || '';
+   document.getElementById('workouthours').value = summaryData.workouthours || '';
+   
+   document.getElementById('water').value = summaryData.water || '';
+    document.getElementById('agenda').value = summaryData.agenda || '';
+    document.getElementById('journal').value = summaryData.journal || '';
+    document.getElementById('thankful').value = summaryData.thankful || '';
+    document.getElementById('lessons').value = summaryData.lessons || '';
+    document.getElementById('sucked').value = summaryData.sucked || '';
+    document.getElementById('improvement').value = summaryData.improvement || '';
+    document.getElementById('accomplishments').value = summaryData.accomplishments || '';
+    document.getElementById('screenTime').value = summaryData.screenTime || '';
+}
 
         // Save summary data to local storage
-        function saveSummary() {
-            const selectedDate = document.getElementById('date').value;
-            const summaryData = {
-                calories: document.getElementById('calories').value,
-                sleep: document.getElementById('sleep').value,
-                medicines: document.getElementById('medicines').value,
-                water: document.getElementById('water').value,
-                agenda: document.getElementById('agenda').value,
-                journal: document.getElementById('journal').value,
-                thankful: document.getElementById('thankful').value,
-                lessons: document.getElementById('lessons').value,
-                sucked: document.getElementById('sucked').value,
-                improvement: document.getElementById('improvement').value,
-                accomplishments: document.getElementById('accomplishments').value,
-                screenTime: document.getElementById('screenTime').value, // Save screen time
-            };
-            localStorage.setItem(selectedDate, JSON.stringify(summaryData));
-            alert('Summary saved!');
-        }
+function saveSummary() {
+    const selectedDate = document.getElementById('date').value;
+    const summaryData = {
+        calories: document.getElementById('calories').value,
+        habits: document.getElementById('habits').value,
+        sleep: document.getElementById('sleep').value, // Total Sleep Hours
+        sleepStart: document.getElementById('sleepStart').value, // Sleep Start Time
+        sleepEnd: document.getElementById('sleepEnd').value, // Sleep End Time
+        medicines: document.getElementById('medicines').value,
+        medicinescount: document.getElementById('medicinescount').value,
+        water: document.getElementById('water').value,
+        workouthours: document.getElementById('workouthours').value,
+        agenda: document.getElementById('agenda').value,
+        journal: document.getElementById('journal').value,
+        thankful: document.getElementById('thankful').value,
+        lessons: document.getElementById('lessons').value,
+        sucked: document.getElementById('sucked').value,
+        improvement: document.getElementById('improvement').value,
+        accomplishments: document.getElementById('accomplishments').value,
+        screenTime: document.getElementById('screenTime').value,
+    };
+    localStorage.setItem(selectedDate, JSON.stringify(summaryData));
+    alert('Summary saved!');
+}
+
 
         // Download summary as PDF
         // Download summary as PDF
 function downloadPDF() {
     const selectedDate = document.getElementById('date').value;
     const calories = document.getElementById('calories').value;
-    const sleep = document.getElementById('sleep').value;
+    const habits = document.getElementById('habits').value;
+      const sleep = document.getElementById('sleep').value;
+    const sleepStart = document.getElementById('sleepStart').value;
+    const sleepEnd = document.getElementById('sleepEnd').value;
     const medicines = document.getElementById('medicines').value;
+    const medicinescount = document.getElementById('medicinescount').value;
+   const workouthours = document.getElementById('workouthours').value;
     const water = document.getElementById('water').value;
     const screenTime = document.getElementById('screenTime').value; 
     const agenda = document.getElementById('agenda').value;
@@ -213,13 +374,22 @@ function downloadPDF() {
     const textWidth = pageWidth - 2 * margin; // Adjusted text width
 
     // Helper function to add text with custom formatting
-    const addHeading = (text, yPosition) => {
-        doc.setFontSize(14); // Increased size for headings
-        doc.setFont('bold');
-        doc.text(text, margin, yPosition); // Use margin for positioning
-        doc.setFontSize(12); // Reset to regular size
-        return yPosition + 10; // Add spacing after heading
-    };
+const addHeading = (text, yPosition) => {
+    doc.setFontSize(14); // Increased size for headings
+    doc.setFont('bold');
+    doc.setFont('italic');
+    
+    // Set the color for the heading (RGB values)
+    doc.setTextColor(0, 102, 204); // This sets the color to a blue shade
+    
+    doc.text(text, margin, yPosition); // Use margin for positioning
+    
+    // Reset text color to black (default) after the heading
+    doc.setTextColor(0, 0, 0);
+    
+    doc.setFontSize(12); // Reset to regular size
+    return yPosition + 10; // Add spacing after heading
+};
 
     const addText = (text, yPosition) => {
         const lines = doc.splitTextToSize(text, textWidth); // Use adjusted text width
@@ -249,23 +419,63 @@ const addHyperlink = (text, url, yPosition) => {
 
     // Add content to the PDF
     y = addHeading(`Daily Summary for ${selectedDate}`, y);
+   // Add Sleep Hours
     y = addHeading(`Sleep Hours:`, y);
-    y = addText(sleep, y);
+    doc.setFontSize(12);
+    doc.text(`Total Sleep Hours: ${sleep}`, 20, y);  // Add Total Sleep Hours
+    y += 10;
+    doc.text(`Sleep Start Time: ${sleepStart}`, 20, y);  // Add Sleep Start Time
+    y += 10;
+    doc.text(`Sleep End Time: ${sleepEnd}`, 20, y);  // Add Sleep End Time
+    y += 20;
     
+    
+
     y = addHeading(`Water Intake:`, y);
-    y = addText(`${water} L`, y);
+    y = addText(`${water} ml`, y);
     
     y = addHeading(`Today's Calories:`, y);
     y = addText(calories, y);
     
+    y = addHeading(`Today's Habits:`, y);
+    y = addText(habits, y);
+    
     y = addHeading(`Medicines Taken:`, y);
     y = addText(medicines, y);
+    y = addHeading(`No of Medicines Taken:`, y);
+    y = addText(medicinescount, y);
+    
 
     
     y = addHeading(`Screen Time:`, y);
     addPageNumber(doc.internal.getNumberOfPages());
+ y = addText(`${screenTime} hours`, y);
+    
+  y = addHeading(`Duration of Workout `, y);
+    y = addText(workouthours, y); 
+    
+    // Gather checkbox states
+    let workoutDays = '';
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        const day = checkbox.id.toUpperCase();
+        const state = checkbox.checked ? 'Completed' : 'Missed';
+        workoutDays += `${day}: ${state}\n`;
+    });
 
-    y = addText(`${screenTime} hours`, y);
+    // Add this workoutDays string to the PDF content wherever you want to place it
+
+    doc.setFontSize(16);
+   // Starting Y position
+    
+    // Example: Adding workout days status to PDF
+    doc.setFontSize(14);
+    doc.text("Workout Days:", 20, y);
+    y += 10;
+    doc.setFontSize(12);
+    doc.text(workoutDays, 20, y);
+    y += workoutDays.split("\n").length * 10; // Adjust y based on number of lines
+    
+    // Continue with the rest of your PDF generation code...
     
     // Start a new page for each section from here on
     doc.addPage();
@@ -275,8 +485,6 @@ const addHyperlink = (text, url, yPosition) => {
     y = addText(agenda, y);
     
 
-    doc.addPage();
-    y = margin;
     y = addHeading(`Thankful For:`, y);
     addPageNumber(doc.internal.getNumberOfPages());
     y = addText(thankful, y);
@@ -303,8 +511,6 @@ const addHyperlink = (text, url, yPosition) => {
     y = addText(accomplishments, y);
     
 
-    doc.addPage();
-    y = margin;
     y = addHeading(`Things that Sucked:`, y); 
     addPageNumber(doc.internal.getNumberOfPages());
     y = addText(sucked, y);
@@ -321,6 +527,119 @@ const addHyperlink = (text, url, yPosition) => {
     // Save the PDF
     doc.save(`Daily_Summary_${selectedDate}.pdf`);
 }
+
+
+
+        function openHealthifyApp() {
+            const appUrl = 'healthify://';
+            const fallbackUrl = 'https://play.google.com/store/apps/details?id=com.healthifyme.basic';
+
+            window.location.href = appUrl;
+
+            setTimeout(function () {
+                window.location.href = fallbackUrl;
+            }, 3000);  // Fallback after 3 seconds if app doesn't open
+        }
+        
+          // Save checkbox state to localStorage
+    function saveCheckboxState() {
+        document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+            localStorage.setItem(checkbox.id, checkbox.checked);
+        });
+    }
+
+    // Load checkbox state from localStorage
+    function loadCheckboxState() {
+        document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+            const savedState = localStorage.getItem(checkbox.id);
+            if (savedState !== null) {
+                checkbox.checked = JSON.parse(savedState);
+            }
+        });
+    }
+
+    // Load state on page load
+    window.onload = loadCheckboxState;
+
+    // Save state on checkbox change
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', saveCheckboxState);
+    });
+    
+        function openFitNotes() {
+            // Try opening the app using a custom URI scheme (replace with FitNotes URI if available)
+            const appUri = 'intent://#Intent;package=com.github.jamesgay.fitnotes;end'; 
+
+            // Open the Play Store if the app isn't installed
+            const playStoreLink = 'https://play.google.com/store/apps/details?id=com.github.jamesgay.fitnotes';
+
+            // Try to open the app using the URI scheme
+            window.location.href = appUri;
+
+            // Fallback to Play Store after a delay if app isn't installed
+            setTimeout(() => {
+                window.location.href = playStoreLink;
+            }, 1000); // Wait 1 second before redirecting to Play Store
+        }
+        
+        function exportSummary() {
+    const selectedDate = document.getElementById('date').value;
+    const summaryData = JSON.parse(localStorage.getItem(selectedDate)) || {};
+
+    const blob = new Blob([JSON.stringify(summaryData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${selectedDate}_summary.json`; // Naming the file based on the selected date
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function importSummary(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+
+            // Populate the input fields with the imported data
+            document.getElementById('calories').value = data.calories || '';
+            document.getElementById('sleep').value = data.sleep || ''; // Total Sleep Hours
+            document.getElementById('sleepStart').value = data.sleepStart || ''; // Sleep Start Time
+            document.getElementById('sleepEnd').value = data.sleepEnd || ''; // Sleep End Time
+            document.getElementById('habits').value = data.habits || '';
+            document.getElementById('medicines').value = data.medicines || '';
+            document.getElementById('medicinescount').value = data.medicinescount || '';
+            document.getElementById('workouthours').value = data.workouthours || '';
+            document.getElementById('water').value = data.water || '';
+            document.getElementById('agenda').value = data.agenda || '';
+            document.getElementById('journal').value = data.journal || '';
+            document.getElementById('thankful').value = data.thankful || '';
+            document.getElementById('lessons').value = data.lessons || '';
+            document.getElementById('sucked').value = data.sucked || '';
+            document.getElementById('improvement').value = data.improvement || '';
+            document.getElementById('accomplishments').value = data.accomplishments || '';
+            document.getElementById('screenTime').value = data.screenTime || '';
+
+            alert('Summary imported successfully!');
+        } catch (error) {
+            alert('Failed to import data. Please ensure the file is in the correct format.');
+        }
+    };
+    reader.readAsText(file);
+}
+  
+window.onload = function() {
+    const today = new Date();
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const formattedDate = today.toLocaleDateString('en-CA', options); // Format for YYYY-MM-DD
+    document.getElementById('date').value = formattedDate; // Set the input's value
+    loadSummary(); // Optionally load summary for today
+};  
 
     </script>
 </body>
