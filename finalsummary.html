@@ -108,6 +108,33 @@ input[type="checkbox"]:checked + .circle {
     background-color: #4CAF50; /* Change to desired color */
     color: white;
 }
+#imageModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#modalImage {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+}
+
+#closeModal {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
@@ -166,7 +193,17 @@ input[type="checkbox"]:checked + .circle {
           <input type ="number" id ="workouthours" placeholder ="Enter Workout Duration in Hours"></input>
           
         </div>
-        <div>
+        
+        
+
+     <div>
+ <!-- Button to open the app -->
+    <button class="open-app-btn" onclick="openFitNotes()"
+    style="background-color: lightgray;
+    color: dimgrey; border: 1px solid #ccc; padding: 3px 3px; font-size: 10px; cursor: pointer;">Open FitNotes</button>
+</div>
+
+<div>
     <h4>Select Workout Days</h4>
     <div class="day-checkboxes">
         <label>
@@ -198,12 +235,6 @@ input[type="checkbox"]:checked + .circle {
             <span class="circle">S</span>
         </label>
     </div>
-    
-     <br>
- <!-- Button to open the app -->
-    <button class="open-app-btn" onclick="openFitNotes()"
-    style="background-color: lightgray;
-    color: dimgrey; border: 1px solid #ccc; padding: 3px 3px; font-size: 10px; cursor: pointer;">Open FitNotes</button>
 </div>
 
 
@@ -211,7 +242,7 @@ input[type="checkbox"]:checked + .circle {
 
         <div>
             <h3>Today's Agenda/To- Do List:</h3>
-            <textarea id="agenda" rows="6"></textarea>
+            <textarea id="agenda" rows="12"></textarea>
         </div>
 
         <div>
@@ -235,6 +266,35 @@ What steps did I take today to work towards my goals?"
 
             ></textarea>
         </div>
+        
+<!-- Add image upload input and preview area -->
+<label for="imageInput" style="background-color: dimgrey; color: white; border: 1px solid #ccc; padding: 6px; font-size: 6px; cursor: pointer; display: inline-block;
+border-radius: 5px;">
+    Choose Files
+</label>
+<input type="file" id="imageInput" accept="image/*" multiple style="display: none;" />
+<br>
+<br>
+
+<div id="imagePreview" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+
+<!-- Clear Images Button -->
+<button id="clearImagesButton" onclick="clearImagesForDate()" style="background-color: dimgrey; color: white; border: 1px solid #ccc; padding: 6px; font-size: 6px; cursor: pointer;">
+    Clear Images for the Day
+</button>
+
+<!-- Modal for viewing full-size images -->
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center;">
+    <span id="closeModal" style="position: absolute; top: 10px; right: 20px; color: white; font-size: 30px; cursor: pointer;">&times;</span>
+    <img id="modalImage" style="max-width: 90%; max-height: 90%;" />
+</div>
+
+
+<!-- Modal to show image in full screen -->
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center;">
+    <span id="closeModal" style="position: absolute; top: 10px; right: 20px; color: white; font-size: 30px; cursor: pointer;">&times;</span>
+    <img id="modalImage" style="max-width: 90%; max-height: 90%;" />
+</div>
 
         <div>
             <h3>Today's Lessons:</h3>
@@ -265,8 +325,15 @@ What mistakes did I make today, and what can I learn from them?"
         </div>
       
 
+<label for="fileInput" style="background-color: black; color: white; border: 1px solid #ccc; padding: 9px 14px ; font-size: 9px; cursor: pointer; display: inline-block; border-radius: 5px;">
+    Import Summary
+</label>
 
-     <input type="file" accept=".json" onchange="importSummary(event)" style="font-size: 10px; cursor: pointer; display: inline-block;" />      
+<!-- Hidden input file element -->
+<input type="file" id="fileInput" accept=".json" onchange="importSummary(event)" style="display: none;" />
+
+
+  
    <button onclick="exportSummary()" style="background-color: black; color: white; border: 1px solid #ccc; padding: 8px 8px; font-size: 10px; cursor: pointer; display: inline-block;">
     Export Summary
 </button>
@@ -274,6 +341,7 @@ What mistakes did I make today, and what can I learn from them?"
         
 <button onclick="saveSummary()">Save Summary</button>
 <button onclick="downloadPDF()">Download PDF</button>
+
         
 
 
@@ -314,6 +382,9 @@ function loadSummary() {
     document.getElementById('improvement').value = summaryData.improvement || '';
     document.getElementById('accomplishments').value = summaryData.accomplishments || '';
     document.getElementById('screenTime').value = summaryData.screenTime || '';
+      // Now load images specific to the selected date
+    loadImagesForDate(selectedDate);
+
 }
 
         // Save summary data to local storage
@@ -340,6 +411,8 @@ function saveSummary() {
     };
     localStorage.setItem(selectedDate, JSON.stringify(summaryData));
     alert('Summary saved!');
+    
+      
 }
 
 
@@ -359,6 +432,9 @@ function downloadPDF() {
     const screenTime = document.getElementById('screenTime').value; 
     const agenda = document.getElementById('agenda').value;
     const journal = document.getElementById('journal').value;
+    // Retrieve image data
+    const storedImages = JSON.parse(localStorage.getItem(`images_${selectedDate}`)) || [];
+
     const thankful = document.getElementById('thankful').value;
     const lessons = document.getElementById('lessons').value;
     const sucked = document.getElementById('sucked').value;
@@ -522,6 +598,22 @@ const addHyperlink = (text, url, yPosition) => {
     addPageNumber(doc.internal.getNumberOfPages());
     y = addText(improvement, y);
     
+// Now add the images
+if (storedImages.length > 0) {
+    y = addHeading(`Images for ${selectedDate}:`, y);
+    storedImages.forEach(imageData => {
+        // Add a new page for each image
+        doc.addPage();
+        y = margin; // Reset position for the new page
+        
+        // Add image to PDF
+        doc.addImage(imageData, 'JPEG', margin, y, 90, 160); // Adjust width and height as needed
+        
+        // Update y position after adding image
+        y += 165; // Move y position down for potential future content (if needed)
+    });
+}
+    
     
 
     // Save the PDF
@@ -541,30 +633,8 @@ const addHyperlink = (text, url, yPosition) => {
             }, 3000);  // Fallback after 3 seconds if app doesn't open
         }
         
-          // Save checkbox state to localStorage
-    function saveCheckboxState() {
-        document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
-            localStorage.setItem(checkbox.id, checkbox.checked);
-        });
-    }
+        
 
-    // Load checkbox state from localStorage
-    function loadCheckboxState() {
-        document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
-            const savedState = localStorage.getItem(checkbox.id);
-            if (savedState !== null) {
-                checkbox.checked = JSON.parse(savedState);
-            }
-        });
-    }
-
-    // Load state on page load
-    window.onload = loadCheckboxState;
-
-    // Save state on checkbox change
-    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', saveCheckboxState);
-    });
     
         function openFitNotes() {
             // Try opening the app using a custom URI scheme (replace with FitNotes URI if available)
@@ -641,6 +711,114 @@ window.onload = function() {
     loadSummary(); // Optionally load summary for today
 };  
 
+// Load images specific to the selected date
+function loadImagesForDate(selectedDate) {
+    const storedImages = JSON.parse(localStorage.getItem(`images_${selectedDate}`)) || [];
+    const imagePreview = document.getElementById('imagePreview');
+    imagePreview.innerHTML = ''; // Clear previous images
+
+    storedImages.forEach(imageData => {
+        const imgElement = document.createElement('img');
+        imgElement.src = imageData;
+        imgElement.style.width = '100px'; // Adjust size
+        imgElement.style.height = '100px'; // Adjust size
+        imgElement.style.cursor = 'pointer'; // Make it clickable
+        imgElement.addEventListener('click', function () {
+            openModal(imageData); // View the image in a modal when clicked
+        });
+        imagePreview.appendChild(imgElement);
+    });
+}
+
+// Save images specific to the selected date
+document.getElementById('imageInput').addEventListener('change', function (event) {
+    const files = event.target.files;
+    const selectedDate = document.getElementById('date').value;
+    const storedImages = JSON.parse(localStorage.getItem(`images_${selectedDate}`)) || [];
+    const imagePreview = document.getElementById('imagePreview');
+
+    // Convert files to base64 and store them in local storage
+    for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const imgElement = document.createElement('img');
+            imgElement.src = e.target.result;
+            imgElement.style.width = '100px'; // Adjust size
+            imgElement.style.height = '100px'; // Adjust size
+            imgElement.style.cursor = 'pointer'; // Make it clickable
+            imgElement.addEventListener('click', function () {
+                openModal(e.target.result); // View the image in a modal when clicked
+            });
+            imagePreview.appendChild(imgElement);
+
+            storedImages.push(e.target.result); // Add image to storage array
+            localStorage.setItem(`images_${selectedDate}`, JSON.stringify(storedImages)); // Save images with date as key
+        };
+        reader.readAsDataURL(files[i]); // Convert image to base64
+    }
+});
+
+// Open modal to view image in full size
+function openModal(imageSrc) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    modal.style.display = 'flex';
+    modalImage.src = imageSrc;
+}
+
+// Close modal on click
+document.getElementById('closeModal').addEventListener('click', function () {
+    document.getElementById('imageModal').style.display = 'none';
+});
+
+// Load today's summary and images on page load
+window.onload = function () {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = today;
+    loadSummary();
+};
+
+// Function to clear images for the selected date
+function clearImagesForDate() {
+    const selectedDate = document.getElementById('date').value;
+
+    // Remove the images associated with the selected date from local storage
+    localStorage.removeItem(`images_${selectedDate}`);
+
+    // Clear the image preview on the page
+    const imagePreview = document.getElementById('imagePreview');
+    imagePreview.innerHTML = '';
+
+    alert('Images for the day have been cleared!');
+}
+
+// Save checkbox state to localStorage
+function saveCheckboxState() {
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        localStorage.setItem(checkbox.id, checkbox.checked); // Save checkbox state (true/false)
+    });
+}
+
+// Load checkbox state from localStorage
+function loadCheckboxState() {
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        const savedState = localStorage.getItem(checkbox.id);
+        if (savedState !== null) {
+            checkbox.checked = JSON.parse(savedState); // Set checkbox state based on saved value
+        }
+    });
+}
+
+// Ensure that the event listeners are only added after the DOM content is fully loaded
+window.addEventListener('DOMContentLoaded', () => {
+    // Load state on page load
+    loadCheckboxState();
+
+    // Add event listeners to save state on checkbox change
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', saveCheckboxState);
+    });
+});
     </script>
 </body>
 </html>
