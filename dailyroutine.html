@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9; /* Light background color for contrast */
+    color: #333; /* Dark text for readability */
+}
+
+/* Container for tasks */
+#taskContainer {
+    background-color: #ffffff; /* White background for the container */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px;
+    max-width: 400px;
+    margin: 20px auto; /* Centering the container */
+}
+
+/* Header styling */
+.task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px; /* Spacing below header */
+}
+
+.task-header h2 {
+    margin: 0;
+    font-size: 1.5em; /* Increased font size for task title */
+}
+
+/* Button styling */
+button {
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* White text on buttons */
+    border: none;
+    border-radius: 5px; /* Rounded button edges */
+    padding: 5px 10px; /* Padding for buttons */
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Disabled button styling */
+button:disabled {
+    background-color: #ccc; /* Greyed out for disabled buttons */
+    cursor: not-allowed; /* Change cursor for disabled */
+}
+
+/* Modal background */
+#modalBackground {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 5;
+}
+
+/* Modal styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white; /* White background for modals */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    z-index: 10;
+    width: 90%; /* Responsive width */
+    max-width: 400px; /* Max width for modals */
+}
+
+/* Modal content styling */
+.modal-content {
+    display: flex;
+    flex-direction: column; /* Stack modal contents vertically */
+}
+
+.modal-content label {
+    margin-bottom: 5px; /* Spacing below labels */
+}
+
+.modal-content input,
+.modal-content textarea {
+    padding: 10px; /* Padding for inputs */
+    border: 1px solid #ccc; /* Light border for inputs */
+    border-radius: 5px; /* Rounded edges for inputs */
+    margin-bottom: 10px; /* Spacing below inputs */
+    font-size: 1em; /* Consistent font size */
+}
+
+/* Progress Bar */
+#pointsProgressContainer {
+    margin-top: 20px;
+}
+
+progress {
+    width: 100%;
+    height: 20px; /* Adjust the height as needed */
+    border-radius: 10px; /* Make the progress bar rounded */
+    background-color: #e0e0e0; /* Light gray background for the progress bar */
+}
+
+progress::-webkit-progress-bar {
+    background-color: #e0e0e0; /* Light gray background */
+    border-radius: 10px; /* Make the progress bar rounded */
+}
+
+progress::-webkit-progress-value {
+    background-color: #4caf50; /* Green fill color */
+    border-radius: 10px; /* Make the filled portion rounded */
+}
+
+progress::-moz-progress-bar {
+    background-color: #4caf50; /* Green fill color for Firefox */
+}
+
+/* Styling for points display */
+#pointsDisplay {
+    font-weight: bold; /* Bold font for emphasis */
+    margin-top: 10px; /* Spacing above points display */
+}
+#taskListContainer {
+    margin-top: 20px;
+}
+
+#taskList {
+    list-style: none; /* Remove default list styles */
+    padding: 0;
+}
+
+#taskList li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space out task title and status */
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Add rounded corners */
+}
+
+.completed {
+    color: green; /* Color for completed tasks */
+}
+
+.incomplete {
+    color: red; /* Color for incomplete tasks */
+}
+
+/* Add more styles as needed */
+    </style>
+</head>
+<body>
+    <div id="modalBackground"></div>
+
+    <div id="taskContainer">
+        
+      
+
+<div id="taskHeader" class="task-header">
+    <!-- Task Title -->
+    <h2 id="taskTitle">Current Task</h2>
+
+    <!-- Edit Button (Pencil Icon) -->
+    <button id="editTask" class="icon-button">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+    </button>
+
+    <!-- Add New Task Button (Plus Icon) -->
+    <button id="addTask" class="icon-button">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+    </button>
+</div>
+
+        <!-- Task Description -->
+        <p id="taskDescription">Description of the current task goes here.</p>
+
+        <!-- Suggested Time of the Day -->
+        <p id="taskSuggestedTime">Suggested time: Morning</p>
+
+        <!-- Points Information -->
+        <p id="taskPoints">Points: 10</p>
+
+        <!-- Timer -->
+        <div id="taskTimer">
+            Time left: <span id="timeLeft">00:00</span>
+        </div>
+        
+        <br>
+        <br>
+
+<!-- Task Control Buttons -->
+<div id="taskControls">
+    <button id="startTask">Start Task</button>
+    <button id="completeTask" disabled>Completed</button>
+    <br>
+    <br>
+    <button id="prevTask" disabled>Previous Task</button>
+    <button id="nextTask" disabled>Next Task</button>
+    <button id="resetTasks">Reset</button> <!-- Add Reset Button -->
+</div>
+
+
+        <!-- Progress Bar for Points -->
+        <div id="pointsProgressContainer">
+            <label for="pointsProgressBar">Progress:</label>
+            <progress id="pointsProgressBar" value="0" max="100"></progress>
+            <span id="pointsDisplay">0/100</span>
+        </div>
+    </div>
+
+<!-- Edit Task Modal -->
+<div id="editTaskModal" class="modal">
+    <div class="modal-content">
+        <h2>Edit Task</h2>
+        <label for="editTaskTitle">Title:</label>
+        <input type="text" id="editTaskTitle">
+        <label for="editTaskDescription">Description:</label>
+        <textarea id="editTaskDescription"></textarea>
+        <label for="editTaskPoints">Points:</label>
+        <input type="number" id="editTaskPoints">
+        <button id="saveTaskEdit">Save</button>
+        <button id="deleteTask" style="background-color: red; color: white;">Delete Task</button> <!-- Add Delete Button -->
+    </div>
+</div>
+
+    <!-- Add Task Modal -->
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Task</h2>
+            <label for="newTaskTitle">Title:</label>
+            <input type="text" id="newTaskTitle">
+            <label for="newTaskDescription">Description:</label>
+            <textarea id="newTaskDescription"></textarea>
+            <label for="newTaskPoints">Points:</label>
+            <input type="number" id="newTaskPoints">
+            <button id="addNewTask">Add Task</button>
+        </div>
+
+        
+    </div>
+          <!-- Task List Section -->
+<div id="taskListContainer">
+    <h3>All Tasks</h3>
+    <ul id="taskList"></ul>
+</div>  
+
+<script>
+    let tasks = [];
+    let currentTaskIndex = 0;
+
+    // Load tasks from local storage or initialize default tasks
+    function loadTasks() {
+        const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+        if (savedTasks) {
+            tasks = savedTasks;
+        } else {
+            tasks = [
+                { title: "Task 1", description: "This is the first task.", started: false, completed: false, duration: 300, points: 10, suggestedTime: "Morning" },
+                { title: "Task 2", description: "This is the second task.", started: false, completed: false, duration: 180, points: 20, suggestedTime: "Afternoon" },
+                { title: "Task 3", description: "This is the third task.", started: false, completed: false, duration: 240, points: 15, suggestedTime: "Evening" }
+            ];
+        }
+        currentTaskIndex = 0; // Reset to the first task
+        updateTask(); // Update UI to reflect loaded tasks
+    }
+
+    // Function to save tasks to local storage
+    function saveTasks() {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    // Call this function to update the progress bar
+    function updateProgressBar() {
+        const totalPointsEarned = tasks.reduce((sum, task) => sum + (task.completed ? task.points : 0), 0);
+        const totalPointsPossible = tasks.reduce((sum, task) => sum + task.points, 0);
+
+        const progressBar = document.getElementById("pointsProgressBar");
+        progressBar.value = totalPointsEarned;
+        progressBar.max = totalPointsPossible;
+
+        const pointsDisplay = document.getElementById("pointsDisplay");
+        pointsDisplay.textContent = `${totalPointsEarned}/${totalPointsPossible}`;
+    }
+
+    // Function to update the current task details in the UI
+    function updateTask() {
+        const task = tasks[currentTaskIndex];
+        document.getElementById("taskTitle").textContent = task.title;
+        document.getElementById("taskDescription").textContent = task.description;
+        document.getElementById("taskPoints").textContent = `Points: ${task.points}`;
+        document.getElementById("taskSuggestedTime").textContent = `Suggested time: ${task.suggestedTime}`;
+        document.getElementById("timeLeft").textContent = formatTime(task.duration);
+        updateProgressBar();
+
+        // Update button states
+        document.getElementById("startTask").disabled = task.started;
+        document.getElementById("completeTask").disabled = !task.started || task.completed;
+        document.getElementById("prevTask").disabled = currentTaskIndex === 0;
+        document.getElementById("nextTask").disabled = currentTaskIndex === tasks.length - 1;
+    }
+
+    // Open Edit Task Modal and populate with current task details
+    document.getElementById("editTask").addEventListener("click", () => {
+        const task = tasks[currentTaskIndex];
+        document.getElementById("editTaskTitle").value = task.title;
+        document.getElementById("editTaskDescription").value = task.description;
+        document.getElementById("editTaskPoints").value = task.points;
+        document.getElementById("editTaskModal").style.display = "block"; // Show the modal
+        document.getElementById("modalBackground").style.display = "block"; // Show background
+    });
+
+    // Save edited task details
+    document.getElementById("saveTaskEdit").addEventListener("click", () => {
+        const task = tasks[currentTaskIndex];
+        task.title = document.getElementById("editTaskTitle").value;
+        task.description = document.getElementById("editTaskDescription").value;
+        task.points = Number(document.getElementById("editTaskPoints").value);
+        updateTask();
+        document.getElementById("editTaskModal").style.display = "none"; // Hide the modal
+        document.getElementById("modalBackground").style.display = "none"; // Hide background
+    });
+
+    // Open Add Task Modal
+    document.getElementById("addTask").addEventListener("click", () => {
+        document.getElementById("addTaskModal").style.display = "block"; // Show the modal
+        document.getElementById("modalBackground").style.display = "block"; // Show background
+    });
+
+    // Add a new task to the task list
+    document.getElementById("addNewTask").addEventListener("click", () => {
+        const newTask = {
+            title: document.getElementById("newTaskTitle").value,
+            description: document.getElementById("newTaskDescription").value,
+            started: false,
+            completed: false,
+            duration: 300, // Default duration or you can allow user input
+            points: Number(document.getElementById("newTaskPoints").value),
+            suggestedTime: "Any" // You can let the user choose a suggested time
+        };
+        
+
+        tasks.push(newTask); // Add the new task to the array
+        document.getElementById("addTaskModal").style.display = "none"; // Hide the modal
+        document.getElementById("modalBackground").style.display = "none"; // Hide background
+        alert("New Task Added!"); // Confirmation alert
+    });
+    
+    // Event listener for deleting the task
+document.getElementById("deleteTask").addEventListener("click", () => {
+    if (confirm("Are you sure you want to delete this task?")) {
+        tasks.splice(currentTaskIndex, 1); // Remove the task from the array
+        if (currentTaskIndex >= tasks.length) {
+            currentTaskIndex = tasks.length - 1; // Adjust currentTaskIndex if needed
+        }
+        saveTasks(); // Save the updated tasks list to local storage
+        updateTask(); // Update the task display
+        document.getElementById("editTaskModal").style.display = "none"; // Hide the modal
+        document.getElementById("modalBackground").style.display = "none"; // Hide background
+    }
+});
+
+// Event listener for resetting tasks
+document.getElementById("resetTasks").addEventListener("click", () => {
+    if (confirm("Are you sure you want to reset all tasks? This action cannot be undone.")) {
+        tasks.forEach(task => {
+            task.started = false;
+            task.completed = false;
+        });
+        currentTaskIndex = 0; // Reset to the first task
+        saveTasks(); // Save the updated tasks list to local storage
+        updateTask(); // Update the task display
+        alert("All tasks have been reset!"); alert("Please refresh the page.");// Optional confirmation alert
+    }
+});
+
+    // Helper function to format time (minutes and seconds)
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+    }
+
+    // Timer functionality
+    let timer;
+    function startTimer(duration, callback) {
+        let timeRemaining = duration;
+        timer = setInterval(() => {
+            timeRemaining--;
+            document.getElementById("timeLeft").textContent = formatTime(timeRemaining);
+            if (timeRemaining <= 0) {
+                clearInterval(timer);
+                callback(); // Mark task as complete when timer ends
+            }
+        }, 1000);
+    }
+
+    // Event listener for starting the task and timer
+    document.getElementById("startTask").addEventListener("click", () => {
+        const task = tasks[currentTaskIndex];
+        if (!task.started) {
+            task.started = true;
+            document.getElementById("completeTask").disabled = false;
+            document.getElementById("startTask").disabled = true;
+            startTimer(task.duration, () => {
+                task.completed = true;
+                document.getElementById("completeTask").disabled = true;
+                document.getElementById("nextTask").disabled = currentTaskIndex === tasks.length - 1;
+                updateProgressBar(); // Update the progress bar when task is completed
+            });
+        }
+    });
+
+    // Event listener for completing the task manually
+    document.getElementById("completeTask").addEventListener("click", () => {
+        const task = tasks[currentTaskIndex];
+        task.completed = true;
+        clearInterval(timer); // Stop the timer
+        document.getElementById("completeTask").disabled = true;
+        document.getElementById("nextTask").disabled = currentTaskIndex === tasks.length - 1;
+        updateProgressBar();
+    });
+
+    // Event listeners for navigating tasks
+    document.getElementById("nextTask").addEventListener("click", () => {
+        if (currentTaskIndex < tasks.length - 1) {
+            currentTaskIndex++;
+            updateTask();
+        }
+    });
+
+    document.getElementById("prevTask").addEventListener("click", () => {
+        if (currentTaskIndex > 0) {
+            currentTaskIndex--;
+            updateTask();
+        }
+    });
+
+    // Load tasks from local storage on page load
+    window.onload = () => {
+        loadTasks();
+        // Set event listeners after loading tasks
+        document.getElementById("startTask").addEventListener("click", startTaskHandler);
+        document.getElementById("completeTask").addEventListener("click", completeTaskHandler);
+        document.getElementById("nextTask").addEventListener("click", nextTaskHandler);
+        document.getElementById("prevTask").addEventListener("click", prevTaskHandler);
+    };
+
+    // Function to start the task
+    function startTaskHandler() {
+        const task = tasks[currentTaskIndex];
+        if (!task.started) {
+            task.started = true;
+            document.getElementById("completeTask").disabled = false;
+            document.getElementById("startTask").disabled = true;
+            startTimer(task.duration, () => {
+                task.completed = true;
+              document.getElementById("completeTask").disabled = true;
+                updateProgressBar(); // Update the progress bar when task is completed
+                // Optionally, you can show an alert or message that the task is completed
+                alert("Task completed!");
+            });
+        }
+        saveTasks(); // Save tasks to local storage after starting
+    }
+
+// Function to complete the task
+function completeTaskHandler() {
+    const task = tasks[currentTaskIndex];
+    task.completed = true;
+    clearInterval(timer); // Stop the timer
+    document.getElementById("completeTask").disabled = true;
+    updateProgressBar(); // Update the progress bar
+
+    // Navigate to the next task
+    if (currentTaskIndex < tasks.length - 1) {
+        currentTaskIndex++;
+        updateTask(); // Update the UI with the next task
+    }
+    
+    
+
+    // Optionally, you can show an alert or message that the task is completed
+    alert("Task completed!");
+    saveTasks(); // Save tasks to local storage after completing
+}
+
+// Event listener for completing the task manually
+document.getElementById("completeTask").addEventListener("click", () => {
+    const task = tasks[currentTaskIndex];
+    task.completed = true;
+    clearInterval(timer); // Stop the timer
+    document.getElementById("completeTask").disabled = true;
+    updateProgressBar(); // Update the progress bar
+
+    // Navigate to the next task
+    if (currentTaskIndex < tasks.length - 1) {
+        currentTaskIndex++;
+        updateTask(); // Update the UI with the next task
+    }
+
+    // Optionally, you can show an alert or message that the task is completed
+    alert("Task completed!");
+    saveTasks(); // Save tasks to local storage after completing
+});
+
+    // Function to navigate to the next task
+    function nextTaskHandler() {
+        if (currentTaskIndex < tasks.length - 1) {
+            currentTaskIndex++;
+            updateTask();
+        }
+    }
+
+    // Function to navigate to the previous task
+    function prevTaskHandler() {
+        if (currentTaskIndex > 0) {
+            currentTaskIndex--;
+            updateTask();
+        }
+    }
+    
+    // Function to render the task list
+function renderTaskList() {
+    const taskListElement = document.getElementById("taskList");
+    taskListElement.innerHTML = ""; // Clear existing list
+
+    tasks.forEach((task, index) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = task.title;
+
+        // Create a span for the status indicator
+        const statusIndicator = document.createElement("span");
+        statusIndicator.className = task.completed ? "completed" : "incomplete";
+        statusIndicator.textContent = task.completed ? "✅" : "❌"; // Tick or cross
+        listItem.appendChild(statusIndicator);
+
+        // Add a click event to highlight the current task when clicked
+        listItem.addEventListener("click", () => {
+            currentTaskIndex = index;
+            updateTask(); // Update to show this task as current
+        });
+
+        taskListElement.appendChild(listItem); // Add the list item to the task list
+    });
+}
+
+// Update loadTasks function to also render the task list
+function loadTasks() {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+    if (savedTasks) {
+        tasks = savedTasks;
+    } else {
+        tasks = [
+            { title: "Task 1", description: "This is the first task.", started: false, completed: false, duration: 300, points: 10, suggestedTime: "Morning" },
+            { title: "Task 2", description: "This is the second task.", started: false, completed: false, duration: 180, points: 20, suggestedTime: "Afternoon" },
+            { title: "Task 3", description: "This is the third task.", started: false, completed: false, duration: 240, points: 15, suggestedTime: "Evening" }
+        ];
+    }
+    currentTaskIndex = 0; // Reset to the first task
+    updateTask(); // Update UI to reflect loaded tasks
+    renderTaskList(); // Render the task list
+}
+
+// Call renderTaskList after adding or completing a task
+document.getElementById("addNewTask").addEventListener("click", () => {
+    // (Existing code to add new task)
+    tasks.push(newTask); // Add the new task to the array
+    renderTaskList(); // Update the task list display
+});
+
+document.getElementById("completeTask").addEventListener("click", () => {
+    // (Existing code to complete the task)
+    updateProgressBar();
+    renderTaskList(); // Update the task list display
+});
+
+    // Save the tasks to local storage every second
+    setInterval(saveTasks, 1000);
+
+    // Load tasks on page load
+    window.onload = () => {
+        loadTasks(); // Load tasks from local storage
+    }; 
+</script>
+</body>
+</html>
+
