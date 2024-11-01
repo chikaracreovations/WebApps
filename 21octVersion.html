@@ -1,0 +1,2547 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Development Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style type="text/css" id="dcoder_stylesheet">body {
+    font-family: Arial, sans-serif;
+}
+
+.section {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 8px;
+    width: 92%;
+    background-color: #f8f8f8;
+ 
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   
+}
+
+
+
+
+.button-container {
+    border-radius: 10px;
+}
+
+
+ .progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.progress {
+    height: 100%;
+    border-radius: 8px;
+    width: 0%;
+    transition: width 0.5s ease;
+
+}
+
+.dashboard {
+    background-color: #4169E1; /* Light cyan */
+    background-size: cover;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+
+}
+    
+
+
+.health-fitness {
+    background-color: #C8E6C9 ; /* Light pink */
+}
+
+.career-studies {
+    background-color: #add8e6; /* Light blue */
+}
+
+.mental-health {
+    background-color: #e6e6fa; /* Lavender */
+}
+.social-relationships {
+    background-color: #F7E7A0; /* Light pink */
+}
+
+.finance-resources  {
+  background-color: #d0f0c0
+}
+
+
+.personal-development {
+    background-color: #FFB9C8; /* Gold */
+}
+
+.edit-button {
+    margin-top: 10px;
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.edit-button:hover {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+}
+
+.close-button {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.habits-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.delete-log-button {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.delete-log-button:hover {
+    color: darkred;
+}
+
+.habits-table th, .habits-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+#dashboard {
+    position: relative;
+    padding: 20px;
+    overflow: hidden;
+}
+
+#avatar-section {
+    position: relative;
+    text-align: center;
+    margin-top: 60px; /* Adjust to move avatar up */
+}
+
+#avatar {
+    font-size: 120px; /* Adjust the size of the emoji */
+    display: inline-block;
+    line-height: 1;
+}
+
+#daily-quote {
+    background-color: #f0f8ff; /* Light background color */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+#daily-quote h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#daily-quote p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+#daily-quote button {
+    background-color: #4CAF50; /* Green button */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#daily-quote button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+}
+
+#tipsButton:hover {
+  background-color: #45a049;
+}
+
+/* Pop-up Box Style */
+.popup {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4); /* Black with opacity */
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #e6e5fb;
+  padding: 15px;
+  border: 1px solid #888;
+  width: 300px;
+  max-width: 100%;
+  border-radius: 10px;
+  position: relative;
+}
+
+/* Close Button Style */
+.close-button {
+  color: #aab;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Tips Textarea Style */
+.tip-text {
+  width: 90%;
+  height: 125px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  resize: none;
+}
+
+/* Save Button Style */
+#saveTipsButton {
+  background-color: #4CAF50; /* Green color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#saveTipsButton:hover {
+  background-color: #45a049;
+}
+.sticky-notes-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.swiper-container {
+    height: auto;/* Adjust height as needed */
+    overflow: hidden; /* Prevents scrolling of the entire page */
+    width: 100%;
+}
+
+
+.swiper-slide {
+    flex: 0 0 auto; /* Prevent shrinking */
+    width: 90%; /* Width of the sticky note */
+    margin: 0 auto; /* Center the sticky note */
+    background-color: #f8f8f8; /* Background color */
+    border-radius: 8px; /* Match section border radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Match section shadow */
+    overflow: hidden; /* Prevent overflow */
+}
+
+
+.swiper-slide {
+    display: flex; /* Center content */
+    justify-content: center; 
+    align-items: center; 
+    height: 100%; /* Fill container */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #fff; /* Change color for visibility */
+    position: absolute; /* Positioning relative to swiper-container */
+    bottom: 20px; /* Position buttons at the bottom */
+    z-index: 0; /* Ensure buttons are above other content */
+}
+
+.swiper-button-next {
+    right: 10px; /* Position next button to the right */
+}
+
+.swiper-button-prev {
+    left: 10px; /* Position prev button to the left */
+}
+
+.swiper-pagination {
+    position: absolute; /* Position relative to container */
+    bottom: 60px; /* Position above navigation buttons */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+}
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Mental Habits Table Body */
+#mentalHabitsTableBody {
+    background: linear-gradient(90deg, #E6E6FA, #F8F8FF); /* Soft Lavender Gradient */
+}
+
+/* Health Habits Table Body */
+#healthHabitsTableBody {
+    background: linear-gradient(90deg, #E2F0D9, #F0FFF0); /* Light Green Gradient */
+}
+
+/* Social Habits Table Body */
+#socialHabitsTableBody {
+    background: linear-gradient(90deg, #FFF5E6, #FFF8DC); /* Light Peach Gradient */
+}
+
+/* Career Habits Table Body */
+#careerHabitsTableBody {
+    background: linear-gradient(90deg, #e0f7fa, #E0FFFF); /* Soft Sky Blue Gradient */
+}
+/*personal Table Body */
+#personalHabitsTableBody {
+    background: linear-gradient(90deg, #ffcccb, #ffdddb); /* Soft Sky Blue Gradient */
+}
+/* Finance Habits Table Body */
+#financeHabitsTableBody {
+    background: linear-gradient(90deg, #FFFACD, #FFFFE0); /* Light Yellow Gradient */
+}
+
+/* Optional: Padding for better visibility */
+td {
+    padding: 10px;
+}
+
+/* Borders for clarity */
+#mentalHabitsTableBody,
+#healthHabitsTableBody,
+#socialHabitsTableBody,
+#careerHabitsTableBody,
+#financeHabitsTableBody {
+    border: 1px solid #ECECEC; /* Light grey border */
+}
+.profile-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 20; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.2); /* Dark background with transparency */
+}
+
+.profile-modal .modal-content {
+    background: rgba(255, 255, 255, 0.9); /* Very light white */
+    margin: 10% auto; /* Centered */
+    padding: 15px; /* Reduced padding */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 90%; /* Responsive width */
+    max-width: 300px; /* Smaller max width */
+}
+
+.profile-modal .close {
+    color: #555;
+    float: right;
+    font-size: 20px; /* Smaller size */
+    font-weight: bold;
+}
+
+.profile-modal .close:hover,
+.profile-modal .close:focus {
+    color: #ff6b6b; /* Light red on hover */
+}
+
+.profile-modal .form-group {
+    margin-bottom: 10px; /* Space between fields */
+}
+
+.profile-modal label {
+    display: block; /* Labels on top of inputs */
+    margin-bottom: 3px; /* Less margin */
+    font-weight: normal; /* Normal weight for labels */
+    color: #333; /* Dark color for labels */
+}
+
+.profile-modal input {
+    width: 90%; /* Full width for inputs */
+    padding: 6px; /* Smaller padding */
+    border: 1px solid #ddd;
+    border-radius: 4px; /* Slightly rounded */
+}
+
+.profile-modal input:focus {
+    border-color: #ff6b6b; /* Highlight color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.profile-modal button {
+    background-color: rgba(107, 191, 107, 0.8); /* Soft green with transparency */
+    color: white;
+    padding: 6px 10px; /* Smaller padding */
+    border: none;
+    border-radius: 4px; /* Rounded button */
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.profile-modal button:hover {
+    background-color: rgba(77, 163, 77, 0.8); /* Darker shade on hover */
+}
+
+<span id="financesLevel" style="display: none;"></span>
+<span id="financesPoints" style="display: none;"></span>
+<span id="financesProgress" style="display: none;"></span>
+
+.habits-table th {
+    background-color: #f4f4f4;
+}</style></head>
+<body>
+    <!-- Main Dashboard Section -->
+    <div class="section" id="mainDashboard">
+        <h2>Main Dashboard</h2>
+        <p>Average Level: <span id="mainLevel">0</span></p>
+        <p>Average Points: <span id="mainPoints">0</span>/500</p>
+        <p> The fact that you are a zero should be motivation enough for you to play this game</p>
+        <div id="dashboard">
+    <!-- Existing content -->
+<!-- Existing content -->
+<div id="avatar-section">
+    <div id="avatar" onclick="openProfileModal()" style="cursor: pointer;">🏋🏻</div> <!-- Emoji avatar -->
+<!-- User Profile Modal -->
+<div id="profileModal" class="modal profile-modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeProfileModal()">&times;</span>
+        <h2>User Profile</h2>
+        <form id="userProfileForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" required>
+            </div>
+            <div class="form-group">
+                <label for="height">Height:</label>
+                <input type="text" id="height" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight:</label>
+                <input type="text" id="weight" required>
+            </div>
+            <div class="form-group">
+                <label for="profession">Profession:</label>
+                <input type="text" id="profession" required>
+            </div>
+            <div class="form-group">
+                <label for="goal">Most Important Goal:</label>
+                <input type="text" id="goal" required>
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
+</div>
+    
+</div>
+
+
+        
+        <p>Level 1 unlocks at 25 points</p>
+<p>Level 2 unlocks at 50 Points </p>
+<p> Level 3 unlocks at 125 points</p>
+<p>  Level 4 unlocks at 250 points</p>
+<p> Level 5 unlocks at 500 points </p>
+
+        <button onclick="saveData()">Save Progress</button>
+    <button onclick="loadData()">Load Progress</button>
+<div id="daily-quote">
+    <h2>Daily Quote</h2>
+    <p id="quote-text">"Click the button to get a new quote!"</p>
+    <button onclick="getDailyQuote()">Get Quote</button>
+    
+</div>
+
+   <a href="https://drive.google.com/file/d/1vyjCiyCuxL0ARblwvi7s-V5IGaWdJxoU/view?usp=drivesdk" class="dashboard-link">Go to Rewards Page</a>
+     </div>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<div class="sticky-notes-container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <!-- Health & Fitness Section -->
+    <div class="section health-fitness">
+        <h2>Health &amp; Fitness 💚💪🏻</h2>
+        <img src="https://media0.giphy.com/media/5g6ijNORnMoqoJ2o1X/giphy.gif" alt="Description of the GIF" width="200" height="200">
+        <p>Level: <span id="healthLevel">0</span></p>
+        <p>Points: <span id="healthPoints">0</span>/500</p>
+        <div class="progress-bar">
+            <div id="healthProgress" class="progress" style="background-color: #ff6347; width: 0%;"></div>
+        </div>   <div class="button-container">
+        <button onclick="adjustProgress('health', 1)">+</button>
+        <button onclick="adjustProgress('health', -1)">-</button>
+    </div>
+        <h4>Tasks:</h4>
+        <ul id="healthTasks" class="task-list">
+            <li><input type="checkbox" data-points="1" onchange="completeTask('health', 'Workout', 1)"> Workout</li>
+            
+            <li>
+              
+            
+              <input type="checkbox" data-points="2" onchange="completeTask('health', 'Eat Healthy', 2)"> Eat Healthy</li>
+              
+        </ul>
+      <button class="edit-button" onclick="editTasks('health')">Edit</button>  
+      
+  
+     
+  
+  
+     <!-- Button to open the Health Pop-up -->
+<button id="healthButton">Open Health Goals</button>
+ 
+       < swipe > 
+ 
+
+         
+        
+<a href="https://lucifercodes0707.github.io/HEALTH-TRACKER/HealthWorkoutTracker.html" target="_blank">
+    <button>Open Health Tracker</button>
+</a>
+
+     <!-- Health Pop-up Box -->
+<div id="healthPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeHealthButton">&times;</span>
+    <h2> Health related goals and Ways to Improve Health</h2>
+    <textarea id="healthText" class="tip-text" placeholder="Eat a balanced diet, rich in fruits and vegetables."></textarea>
+    <textarea id="additionalHealth" class="tip-text" placeholder="Exercise regularly, aiming for 30 minutes of activity daily."></textarea>
+    <textarea id="additionalHealth2" class="tip-text" placeholder="Write ways to solve the problems here..."></textarea>
+    
+    <button id="saveHealthButton">Save</button>
+  </div>
+</div>
+     
+     
+
+    <!-- Edit box container for the Health & Fitness section -->
+    <div id="healthEditBox" class="edit-box" style="display: none;">
+        <!-- Edit box content will be inserted dynamically -->
+    </div>
+    </div>
+              
+            </div>
+            <div class="swiper-slide">
+              
+                 <!-- Career & Studies Section -->
+    <div class="section career-studies">
+        <h2>Career &amp; Studies👨‍⚕️📗</h2>
+        <img src="https://i.pinimg.com/originals/a3/95/db/a395db5658cf2b8b6794e17c3f573fb1.gif" alt="Descriptive Text" width="300" height="200">
+        <p>Level: <span id="careerLevel">0</span></p>
+        <p>Points: <span id="careerPoints">0</span>/500</p>
+        <div class="progress-bar">
+            <div id="careerProgress" class="progress" style="background-color: #1e90ff; width: 0%;"></div>
+        </div>
+           <div class="button-container">
+        <button onclick="adjustProgress('career', 1)">+</button>
+        <button onclick="adjustProgress('career', -1)">-</button>
+    </div>
+        <h4>Tasks:</h4>
+        <ul id="careerTasks" class="task-list">
+            <li><input type="checkbox" data-points="1" onchange="completeTask('career', 'Study 2 hours', 1)"> Study 2 hours</li>
+            <li><input type="checkbox" data-points="1" onchange="completeTask('career', 'Read a book', 1)"> Read a book</li>
+        </ul>
+        
+<button class="edit-button" onclick="editTasks('career')">Edit</button>
+<button id="careerButton">Open Career Goals</button>
+<div id="careerPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeCareerButton">&times;</span>
+    <h2> Career Goals</h2>
+    <textarea id="careerText" class="tip-text" placeholder="Update your goals regularly."></textarea>
+    <button id="saveCareerButton">Save</button>
+  </div>
+</div>
+
+    <!-- Edit box container for the Health & Fitness section -->
+    <div id="careerEditBox" class="edit-box" style="display: none;">
+        <!-- Edit box content will be inserted dynamically -->
+    </div>
+</div>
+
+
+ 
+              
+            </div>
+            <div class="swiper-slide">
+                  <!-- Mental Health Section -->
+    <div class="section mental-health">
+        <h2>Mental Health🧠💜</h2>
+        <img src="https://images.squarespace-cdn.com/content/v1/5bd6f47ff4e531615a9ec251/1553113311667-S9HIPCHFJL8H9AD4MGF6/illustrations%C2%A9jakehawkins_mindfulness.gif" alt="Descriptive Text" width="300" height="200">
+        <p>Level: <span id="mentalLevel">0</span></p>
+        <p>Points: <span id="mentalPoints">0</span>/500</p>
+        <div class="progress-bar">
+            <div id="mentalProgress" class="progress" style="background-color: #9370db; width: 0%;"></div>
+        </div><div class="button-container">
+    <button onclick="adjustProgress('mental', 1)">+</button>
+    <button onclick="adjustProgress('mental', -1)">-</button>
+</div>
+        <h4>Tasks:</h4>
+        <ul id="mentalTasks" class="task-list">
+            <li><input type="checkbox" data-points="1" onchange="completeTask('mental', 'Meditate', 1)"> Meditate</li>
+            <li><input type="checkbox" data-points="2" onchange="completeTask('mental', 'Journal', 2)"> Journal</li>
+        </ul>
+<button class="edit-button" onclick="editTasks('mental')">Edit</button> 
+<!-- Button to open the Mood Tracker modal -->
+<br>
+
+<button id="openMoodTrackerBtn">Open Mood Tracker</button>
+<br>
+<a href="https://lucifercodes0707.github.io/Journal/finalsummary.html" target="_blank">
+    <button>Journal & Reflections</button>
+</a>
+<br>
+<button id="mentalButton">Open Mental Health Goals</button>
+<div id="mentalPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeMentalButton">&times;</span>
+    <h2>Ways to Improve Mental Health
+    and Mental Health Goals</h2>
+    <textarea id="mentalText" class="tip-text" placeholder="Practice mindfulness."></textarea>
+    <button id="saveMentalButton">Save</button>
+  </div>
+</div>
+
+<!-- Mood Tracker Modal -->
+<div id="moodTrackerModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close" id="closeMoodTracker">&times;</span>
+    <h2>Mood Tracker</h2>
+    
+    <!-- Mood Tracker form goes here -->
+    <div id="moodTrackerContent">
+      
+        <h3>How are you feeling today!?</h3>
+        <div class="mood-buttons">
+            <button type="button" onclick="addMood('😃')">😃</button>
+            <button type="button" onclick="addMood('😁')">😁</button>
+            <button type="button" onclick="addMood('😂')">😂</button>
+        <button type="button" onclick="addMood('😊')">😊</button>
+            <button type="button" onclick="addMood('😐')">😐</button>
+          <button type="button" onclick="addMood('😶')">  😶</button>
+       <button type="button" onclick="addMood('😕')">😕</button>
+            <button type="button" onclick="addMood('😭')">😭</button>
+        </div>
+        <div id="moodHistory" class="mood-history"></div>
+    
+        
+        
+    </div>
+  </div>
+</div>
+  
+ </div>
+<div>
+        <!-- Edit box container for the Health & Fitness section -->
+    <div id="mentalEditBox" class="edit-box" style="display: none;">
+        <!-- Edit box content will be inserted dynamically -->
+    </div>
+</div>
+    
+            </div>
+            <div class="swiper-slide">    <!-- Social Life & Relationships Section -->
+      <div class="section social-relationships">
+        <h2>Social Life &amp; Relations👬📲</h2>
+        <img src="https://www.icegif.com/wp-content/uploads/2022/03/icegif-1000.gif" alt="GIF" width="200" height="100">
+        <p>Level: <span id="socialLevel">0</span></p>
+        <p>Points: <span id="socialPoints">0</span>/500</p>
+        <div class="progress-bar">
+            <div id="socialProgress" class="progress" style="background-color: #ff8c8c; width: 0%;"></div>
+        </div><div class="button-container">
+    <button onclick="adjustProgress('social', 1)">+</button>
+    <button onclick="adjustProgress('social', -1)">-</button>
+</div>
+        <h4>Tasks:</h4>
+        <ul id="socialTasks" class="task-list">
+            <li><input type="checkbox" data-points="1" onchange="completeTask('social', 'Call a friend', 1)"> Call a friend</li>
+            <li><input type="checkbox" data-points="2" onchange="completeTask('social', 'Attend an event', 2)"> Attend an event</li>
+        </ul>
+<button class="edit-button" onclick="editTasks('social')">Edit</button>
+<button id="socialButton">Open Social Life Goals</button>
+<div id="socialPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeSocialButton">&times;</span>
+    <h2>Social Life Goals & Ways to Improve Social Skills</h2>
+    <textarea id="socialText" class="tip-text" placeholder="Practice active listening."></textarea>
+    <button id="saveSocialButton">Save</button>
+  </div>
+</div>
+
+    <!-- Edit box container for the Health & Fitness section -->
+    <div id="socialEditBox" class="edit-box" style="display: none;">
+        <!-- Edit box content will be inserted dynamically -->
+    </div>
+</div>
+
+</div>
+
+
+            <div class="swiper-slide">
+                  <!-- Finance & Resources Section -->
+    <div class="section finance-resources">
+        <h2>Finance &amp; Resources💳💸</h2>
+        <img src="https://media1.giphy.com/media/3oxHQg1F3nkc7gt9Qc/giphy.gif" alt="Money GIF" width="300" height="200">
+        <p>Level: <span id="financeLevel">0</span></p>
+        <p>Points: <span id="financePoints">0</span>/500</p>
+        <div class="progress-bar">
+            <div id="financeProgress" class="progress" style="background-color: #7cfc00; width: 0%;"></div>
+        </div><div class="button-container">
+    <button onclick="adjustProgress('finance', 1)">+</button>
+    <button onclick="adjustProgress('finance', -1)">-</button>
+</div>
+        <h4>Tasks:</h4>
+        <ul id="financeTasks" class="task-list">
+            <li><input type="checkbox" data-points="1" onchange="completeTask('finance', 'Budget for the month', 1)"> Budget for the month</li>
+            <li><input type="checkbox" data-points="2" onchange="completeTask('finance', 'Read a finance book', 2)"> Read a finance book</li>
+        </ul>
+<button class="edit-button" onclick="editTasks('finance')">Edit</button>
+<button id="financeButton">Open Financial Goals</button>
+<div id="financePopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeFinanceButton">&times;</span>
+    <h2>Financial Goals & Ways to Improve Finance</h2>
+    <textarea id="financeText" class="tip-text" placeholder="Create a budget."></textarea>
+    <button id="saveFinanceButton">Save</button>
+  </div>
+</div>
+
+    <!-- Edit box container for the Health & Fitness section -->
+    <div id="financeEditBox" class="edit-box" style="display: none;">
+        <!-- Edit box content will be inserted dynamically -->
+    </div>
+</div>
+    
+    
+               </div>
+               
+              <div class="swiper-slide">    <!-- Personal Development & Goals Section -->
+    <div class="section personal-development">
+        <h2>Personal Development &amp; Goals😡❤️</h2>
+        <img src="https://media4.giphy.com/media/uBmu0qOrV8Er5Qi5yW/giphy.gif" alt="GIF" width="300" height="200">
+        <p>Level: <span id="personalLevel">0</span></p>
+        <p>Points: <span id="personalPoints">0</span>/500</p>
+        <div class="progress-bar">
+            <div id="personalProgress" class="progress" style="background-color: #ffc107; width: 0%;"></div>
+        </div><div class="button-container">
+    <button onclick="adjustProgress('personal', 1)">+</button>
+    <button onclick="adjustProgress('personal', -1)">-</button>
+</div>
+        <h4>Tasks:</h4>
+        <ul id="personalTasks" class="task-list">
+            <li><input type="checkbox" data-points="1" onchange="completeTask('personal', 'Set goals', 1)"> Set goals</li>
+            <li><input type="checkbox" data-points="2" onchange="completeTask('personal', 'Read a personal development book', 2)"> Read a personal development book</li>
+        </ul>
+         <button class="edit-button" onclick="editTasks('personal')">Edit</button>
+         <button id="personalButton">Open Personal Goals</button>
+<div id="personalPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closePersonalButton">&times;</span>
+    <h2>Ways to Improve Personal Growth
+    and Personal Goals</h2>
+    <textarea id="personalText" class="tip-text" placeholder="Set realistic goals."></textarea>
+    <button id="savePersonalButton">Save</button>
+  </div>
+</div>
+         
+    <!-- Edit box container for the Health & Fitness section -->
+    <div id="personalEditBox" class="edit-box" style="display: none;">
+        <!-- Edit box content will be inserted dynamically -->
+        
+
+        
+    </div>
+    <!-- Problems Button -->
+<button id="problemsButton">Problems</button>
+
+        
+
+<!-- Problems Pop-up -->
+<div id="problemsPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeProblemsButton">&times;</span>
+    <h3>Problems</h3>
+    <textarea id="problemsText" class="tip-text" placeholder="Write your current problems here..."></textarea>
+    <textarea id="additionalProblems" class="tip-text" placeholder="Write ways to solve the problems here..."></textarea>
+    <button id="saveProblemsButton">Save Problems</button>
+    <span id="financesLevel"></span>
+    👾
+<span id="financesPoints"></span>
+<span id="financesProgress"></span>
+
+  </div>
+</div>
+</div>
+</div></div>
+            
+        </div>
+    </div>
+    
+
+    
+    
+</div>
+
+<div id="editModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeEditModal()">&times;</span>
+        <div id="editTasksContainer"></div>
+    </div>
+</div>
+
+    
+
+
+<!-- Updated Daily Habits Table with Streak Column -->
+  <h4>Daily Habits</h4>
+  <table class="habits-table">
+      <thead>
+          <tr>
+              <th>Habit</th>
+              <th>Completed</th>
+              <th>Streak</th> <!-- Add streak column header -->
+              <th>Action</th>
+          </tr>
+      </thead>
+      <tbody id="personalHabitsTableBody">
+          <tr>
+              <td>Read a book</td>
+              <td><input type="checkbox" data-habit="Read a book" onchange="updateHabitStatus('personal', 'Read a book')"></td>
+              <td class="streak" data-habit="Read a book">0</td> <!-- Add streak placeholder -->
+              <td><button onclick="deleteHabit(this)">Delete</button></td>
+          </tr>
+          <tr>
+              <td>Practice meditation</td>
+              <td><input type="checkbox" data-habit="Practice meditation" onchange="updateHabitStatus('personal', 'Practice meditation')"></td>
+              <td class="streak" data-habit="Practice meditation">0</td> <!-- Add streak placeholder -->
+              <td><button onclick="deleteHabit(this)">Delete</button></td>
+          </tr>
+      </tbody>
+    
+<tbody id="mentalHabitsTableBody"></tbody>
+<tbody id="healthHabitsTableBody"></tbody>
+<tbody id="socialHabitsTableBody"></tbody>
+<tbody id="careerHabitsTableBody"></tbody>
+<tbody id="financeHabitsTableBody"></tbody>
+
+  </table>
+  
+  <!-- Edit Habits Section -->
+  <div id="personalEditHabits" class="edit-box" style="display: none;">
+      <h4>Edit Habits</h4>
+      <input type="text" id="newHabitName" placeholder="New Habit Name">
+      
+      <button onclick="addHabit('personal')">Add Habit</button>
+      <select id="habitSection">
+    <option value="personal">Personal Development</option>
+    <option value="mental">Mental Health</option>
+    <option value="health">Health and Fitness</option>
+    <option value="social">Social Life and Relations</option>
+    <option value="career">Career and Studies</option>
+    <option value="finance">Finances and Resources</option>
+</select>
+      <button onclick="toggleEditHabits()">Close</button>
+  </div>
+  
+  
+  <button class="edit-button" onclick="toggleEditHabits()">Edit Habits</button>
+
+  
+  <!-- Tips Button -->
+<button id="tipsButton">📈📉</button>
+
+  <a href="https://lucifercodes0707.github.io/Journal/dailyroutine.html" target="_blank">
+    <button>Begin Daily Routine</button>
+</a>
+
+  <div id="todoList">
+    <h3>To-Do List:</h3>
+    <input type="text" id="todoInput" placeholder="Add a new task" />
+    <button onclick="addTodo()">Add</button>
+    <ul id="todoItems"></ul>
+</div>
+
+<div id="tobuyList">
+    <h3>To-Buy List:</h3>
+    <input type="text" id="tobuyInput" placeholder="Add a new item" />
+        <button onclick="addTobuy()">Add</button>
+        <br>
+        <br>
+    <select id="categorySelect" onchange="showSelectedList()">
+        <option value="food">Food</option>
+        <option value="clothing">Clothing</option>
+        <option value="medicines">Medicines</option>
+        <option value="others">Others</option>
+    </select>
+    
+
+
+    <div id="listsContainer">
+        <h4 id="foodHeader">Food Items:</h4>
+        <ul id="foodItems"></ul>
+
+        <h4 id="medicinesHeader">Medicines Items:</h4>
+        <ul id="medicinesItems"></ul>
+
+        <h4 id="clothingHeader">Clothing Items:</h4>
+        <ul id="clothingItems"></ul>
+
+        <h4 id="othersHeader">Other Items:</h4>
+        <ul id="othersItems"></ul>
+    </div>
+</div>
+
+    
+    
+
+
+<!-- Tips Pop-up Box -->
+<div id="tipsPopup" class="popup">
+  <div class="popup-content">
+    <span class="close-button" id="closeButton">&times;</span>
+    <h2>SUMMARY AND REFLECTIONS📈</h2>
+    <textarea id="tipsText" class="tip-text">Reflections and tips</textarea>
+    <textarea id="additionalTips" class="tip-text">Daily summary </textarea>
+    <button id="saveTipsButton">Save</button>
+  </div>
+</div>
+
+
+
+
+<!-- Task Log Section -->
+<div class="section log-section">
+    <h2>Task Log</h2>
+
+    <!-- Date Filter -->
+    <label for="dateFilter">Filter by Date:</label>
+    <input type="date" id="dateFilter" onchange="filterTasksByDate(event.target.value)" />
+
+    <ul id="logList"></ul>
+    <button onclick="clearLog()">Clear History</button>
+    <button onclick="exportLogToPDF()">Export Log to PDF</button>
+</div>
+
+    <!-- Edit Tasks Modal -->
+    <div id="editModal" style="display: none;">
+        <div id="editTasksContainer"></div>
+        <button onclick="closeEditModal()">Close</button>
+    </div>
+    <div id="task-log">
+    <!-- The dates will be listed here -->
+</div>
+
+<div id="task-details">
+    <!-- The tasks for a selected date will be shown here -->
+</div>
+
+<button onclick="exportToJSON()">Export Data</button>
+<button onclick="importFromJSON()">Import Data</button>
+
+
+
+
+<script type="text/javascript" id="dcoder_script">// Section data for points and levels
+let sectionPoints = {
+    health: 0,
+    career: 0,
+    mental: 0,
+    social: 0,
+    finance: 0,
+    personal: 0
+};
+let taskLogs = []; // Global array to store log data
+
+
+
+
+let sectionLevels = {
+    health: 0,
+    career: 0,
+    mental: 0,
+    social: 0,
+    finance: 0,
+    personal: 0
+};
+
+const maxPointsPerLevel = 500; // Maximum points needed to reach the highest level
+
+function completeTask(section, taskName, points) {
+    sectionPoints[section] += points;
+    updateSection(section);
+    updateMainDashboard();
+    logTask(section, taskName, points);
+}
+
+
+function updateSection(section) {
+    const levelElement = document.getElementById(`${section}Level`);
+    const pointsElement = document.getElementById(`${section}Points`);
+    const progressElement = document.getElementById(`${section}Progress`);
+
+    if (levelElement) {
+        levelElement.textContent = sectionLevels[section];
+    } else {
+        console.error(`Element with ID ${section}Level not found.`);
+    }
+
+    if (pointsElement) {
+        pointsElement.textContent = sectionPoints[section];
+    } else {
+        console.error(`Element with ID ${section}Points not found.`);
+    }
+
+    // Determine the level based on points
+    if (sectionPoints[section] >= 499) {
+        sectionLevels[section] = 5;
+    } else if (sectionPoints[section] >= 249) {
+        sectionLevels[section] = 4;
+    } else if (sectionPoints[section] >= 124) {
+        sectionLevels[section] = 3;
+    } else if (sectionPoints[section] >= 49) {
+        sectionLevels[section] = 2;
+    } else if (sectionPoints[section] >= 24) {
+        sectionLevels[section] = 1;
+    } else {
+        sectionLevels[section] = 0;
+    }
+
+
+}
+
+// Call updateSection based on the section value
+const section = 'finances'; // Example section
+if (section === 'finance' || section === 'finances') {
+    updateSection('finance'); // Always call 'finance'
+}
+function updateMainDashboard() {
+    const totalPoints = Object.values(sectionPoints).reduce((a, b) => a + b, 0);
+    const totalLevels = Object.values(sectionLevels).reduce((a, b) => a + b, 0);
+
+    const averagePoints = (totalPoints / 6).toFixed(2);
+    const averageLevel = (totalLevels / 6).toFixed(2);
+
+    document.getElementById('mainPoints').textContent = averagePoints;
+    document.getElementById('mainLevel').textContent = averageLevel;
+}
+
+
+function logTask(section, taskName, points) {
+    const logList = document.getElementById('logList');
+
+    const timeStamp = new Date(); // Capture full date and time
+    const dateString = timeStamp.toLocaleDateString(); // Only capture the date part
+    const formattedTimeStamp = timeStamp.toLocaleString(); // Format both date and time for better readability
+
+    // Create and display the new log
+    const newLog = document.createElement('li');
+    newLog.textContent = `Completed task "${taskName}" in ${section} section with ${points} points on ${formattedTimeStamp}`;
+    logList.prepend(newLog);
+
+    // Push the log into taskLogs with dateString and formattedTimeStamp for filtering purposes
+    taskLogs.push({ section, taskName, points, dateString, timeStamp: formattedTimeStamp });
+
+    saveData();  // Ensure to save this log to localStorage
+}
+
+
+function filterTasksByDate(selectedDate) {
+    const logList = document.getElementById('logList');
+    logList.innerHTML = '';  // Clear the task log list to display filtered results
+
+    // Format the selected date to match the format stored in taskLogs (dd/mm/yyyy or mm/dd/yyyy)
+    const formattedSelectedDate = new Date(selectedDate).toLocaleDateString();
+
+    let tasksFound = false;  // Flag to track if tasks are found
+
+    taskLogs.forEach(log => {
+        // Check if the log's dateString matches the selected date
+        if (log.dateString === formattedSelectedDate) {
+            const logItem = document.createElement('li');
+            logItem.textContent = `Completed task "${log.taskName}" in ${log.section} section with ${log.points} points on ${log.timeStamp}`;
+            logList.appendChild(logItem);
+            tasksFound = true;  // Set flag to true if tasks are found
+        }
+    });
+
+    // If no tasks are found, display a "No tasks present" message
+    if (!tasksFound) {
+        const noTasksMessage = document.createElement('li');
+        noTasksMessage.textContent = 'No tasks present for this date.';
+        logList.appendChild(noTasksMessage);
+    }
+}
+
+// Function to clear the task log from both the UI and the global array
+function clearLog() {
+    document.getElementById('logList').innerHTML = '';  // Clear the displayed list
+    taskLogs = [];  // Reset the global task log array
+}
+
+
+function editTasks(section) {
+    const tasks = document.querySelectorAll(`#${section}Tasks li`);
+    let taskListHtml = '';
+    tasks.forEach((task, index) => {
+        const taskText = task.textContent.trim();
+        const points = task.querySelector('input').dataset.points;
+        taskListHtml += `
+            <div>
+                <input type="text" id="${section}Task${index}" value="${taskText}" />
+                <input type="number" id="${section}Points${index}" value="${points}" />
+                <button onclick="saveTask('${section}', ${index})">Save</button>
+                <button onclick="deleteTask('${section}', ${index})">Delete</button>
+            </div>
+        `;
+    });
+
+    const modalContent = `
+        <h3>Edit Tasks for ${section.charAt(0).toUpperCase() + section.slice(1)}</h3>
+        ${taskListHtml}
+        <input type="text" id="${section}NewTaskName" placeholder="New Task Name" />
+        <input type="number" id="${section}NewTaskPoints" placeholder="Points" />
+        <button onclick="addTask('${section}')">Add Task</button>
+    `;
+    document.getElementById('editTasksContainer').innerHTML = modalContent;
+    document.getElementById('editModal').style.display = 'block';
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+// Function to update the task log UI
+function updateTaskLog() {
+    const taskLogContainer = document.getElementById("task-log");
+    taskLogContainer.innerHTML = ""; // Clear the task log
+
+    // Loop through the taskLog object and create a date element for each date
+    for (const date in taskLog) {
+        const dateElement = document.createElement("div");
+        dateElement.textContent = date; // Display the date
+
+        // Add click event to show tasks for this date
+        dateElement.addEventListener("click", function() {
+            showTasksForDate(date);
+        });
+
+        // Add the date element to the task log container
+        taskLogContainer.prepend(dateElement);
+    }
+}
+
+
+// Function to show tasks for a selected date
+function showTasksForDate(date) {
+    const taskDetailsContainer = document.getElementById("task-details");
+    taskDetailsContainer.innerHTML = ""; // Clear previous tasks
+
+    // Get the tasks for the selected date
+    const tasks = taskLog[date];
+
+    // Display each task
+    tasks.forEach(function(task) {
+        const taskElement = document.createElement("div");
+        taskElement.textContent = task;
+        taskDetailsContainer              .appendChild(taskElement);    
+    });
+}
+function addTask(section        ) {
+    const taskName = document.getElementById(`${section}NewTaskName`).value;
+    const taskPoints = parseInt(document.getElementById(`${section}NewTaskPoints`).value, 10);
+
+    if (taskName && !isNaN(taskPoints)) {
+        const taskList = document.getElementById(`${section}Tasks`);
+        const newTask = document.createElement('li');
+        newTask.innerHTML = `<input type="checkbox" data-points="${taskPoints}" onchange="completeTask('${section}', '${taskName}', ${taskPoints})"> ${taskName}`;
+        taskList.appendChild(newTask);
+        document.getElementById(`${section}NewTaskName`).value = '';
+        document.getElementById(`${section}NewTaskPoints`).value = '';
+    } else {
+        alert('Please enter a valid task name and points.');
+    }
+}
+
+function saveTask(section, index) {
+    const newName = document.getElementById(`${section}Task${index}`).value;
+    const newPoints = parseInt(document.getElementById(`${section}Points${index}`).value, 10);
+
+    if (newName && !isNaN(newPoints)) {
+        const taskList = document.getElementById(`${section}Tasks`);
+        const task = taskList.children[index];
+        const checkbox = task.querySelector('input');
+        checkbox.dataset.points = newPoints;
+        task.innerHTML = `<input type="checkbox" data-points="${newPoints}" onchange="completeTask('${section}', '${newName}', ${newPoints})"> ${newName}`;
+    } else {
+        alert('Please enter a valid task name and points.');
+    }
+}
+
+function deleteTask(section, index) {
+    const taskList = document.getElementById(`${section}Tasks`);
+    taskList.removeChild(taskList.children[index]);
+}
+function adjustProgress(section, amount) {
+    // Ensure amount is an integer and adjust points
+    const newPoints = sectionPoints[section] + amount;
+
+    // Prevent negative points
+    if (newPoints < 0) {
+        sectionPoints[section] = 0;
+    } else if (newPoints > 500) {
+        sectionPoints[section] = 500;
+    } else {
+        sectionPoints[section] = newPoints;
+    }
+
+    // Update the section and main dashboard
+    updateSection(section);
+    updateMainDashboard();
+}
+
+
+function toggleEdit(section) {
+    const editBox = document.getElementById(`${section}EditBox`);
+    if (editBox.style.display === 'none' || editBox.style.display === '') {
+        // Show the edit box
+        editBox.style.display = 'block';
+        populateEditBox(section); // Call a function to populate the edit box with content
+    } else {
+        // Hide the edit box
+        editBox.style.display = 'none';
+    }
+}
+
+function populateEditBox(section) {
+    const editBox = document.getElementById(`${section}EditBox`);
+    let taskListHtml = '';
+    const tasks = document.querySelectorAll(`#${section}Tasks li`);
+    tasks.forEach((task, index) => {
+        const taskText = task.textContent.trim();
+        const points = task.querySelector('input').dataset.points;
+        taskListHtml += `
+            <div>
+                <input type="text" id="${section}Task${index}" value="${taskText}" />
+                <input type="number" id="${section}Points${index}" value="${points}" />
+                <button onclick="saveTask('${section}', ${index})">Save</button>
+                <button onclick="deleteTask('${section}', ${index})">Delete</button>
+            </div>
+        `;
+    });
+
+    editBox.innerHTML = `
+        <h3>Edit Tasks for ${section.charAt(0).toUpperCase() + section.slice(1)}</h3>
+        ${taskListHtml}
+        <input type="text" id="${section}NewTaskName" placeholder="New Task Name" />
+        <input type="number" id="${section}NewTaskPoints" placeholder="Points" />
+        <button onclick="addTask('${section}')">Add Task</button>
+    `;
+}
+
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark-mode');
+}
+
+function toggleEditHabits() {
+    const editBox = document.getElementById('personalEditHabits');
+    editBox.style.display = editBox.style.display === 'none' ? 'block' : 'none';
+}
+
+function addHabit() {
+    const habitName = document.getElementById('newHabitName').value.trim();
+    const section = document.getElementById('habitSection').value; // Get the selected section
+    const tableBody = document.getElementById(`${section}HabitsTableBody`);
+
+    console.log('Table Body:', tableBody); // Log tableBody for debugging
+
+    if (habitName && tableBody) { // Check if tableBody exists
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${habitName}</td>
+            <td><input type="checkbox" data-habit="${habitName}" onchange="updateHabitStatus('${section}', '${habitName}')"></td>
+            <td class="streak" data-habit="${habitName}">0</td>
+            <td><button onclick="deleteHabit(this)">Delete</button></td>
+        `;
+        tableBody.appendChild(newRow);
+        document.getElementById('newHabitName').value = '';
+    } else {
+        alert('Please enter a habit name or make sure the section is valid.');
+    }
+    saveData();
+}
+
+function deleteHabit(button) {
+    const row = button.parentElement.parentElement;
+    row.remove();
+}
+function updateHabitStatus(section, habit) {
+    const checkbox = document.querySelector(`input[data-habit="${habit}"]`);
+    const isChecked = checkbox.checked;
+    const streakElement = document.querySelector(`.streak[data-habit="${habit}"]`);
+    let currentStreak = parseInt(streakElement.innerText, 10) || 0;
+    const points = 0.25;
+
+    // Get current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+
+    // Retrieve habit data from localStorage or initialize it
+    let habitData = JSON.parse(localStorage.getItem('habitData')) || {};
+
+    // Initialize habit data if not found
+    if (!habitData[habit]) {
+        habitData[habit] = { lastChecked: '', streak: 0 };
+    }
+
+    // Check if the checkbox is checked
+    if (isChecked) {
+        if (habitData[habit].lastChecked !== today) {
+            // If it's a new day, increment the streak
+            currentStreak += 1;
+            streakElement.innerText = currentStreak;
+            habitData[habit].streak = currentStreak;
+
+            // Update lastChecked to today
+            habitData[habit].lastChecked = today;
+        }
+
+        // Add points and log task completion
+        sectionPoints[section] += points;
+        logTask(section, `Completed habit "${habit}"`, points);
+
+    } else {
+        // If unchecked, reset the streak
+        currentStreak = 0;
+        streakElement.innerText = currentStreak;
+        habitData[habit].streak = currentStreak;
+        habitData[habit].lastChecked = today;  // Track reset date in case you want to handle streak resets
+    }
+
+    // Save updated habit data to localStorage
+    localStorage.setItem('habitData', JSON.stringify(habitData));
+
+    // Debugging: Log current habitData to check if it updates
+    console.log('Updated habitData:', habitData);
+
+    // Update section points and dashboard
+    updateSection(section);
+    updateMainDashboard();
+  
+}
+
+function resetHabitsIfNewDay() {
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD
+    let habitData = JSON.parse(localStorage.getItem('habitData')) || {};
+    
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        const habit = checkbox.getAttribute('data-habit');
+        if (habitData[habit] && habitData[habit].lastChecked !== today) {
+            // Uncheck the checkbox if it's a new day
+            checkbox.checked = false;
+
+            // Reset streak if the habit was not completed today
+            const streakElement = document.querySelector(`.streak[data-habit="${habit}"]`);
+            streakElement.innerText = '0'; // Reset streak
+            habitData[habit].streak = 0;
+        }
+    });
+    
+    // Save the reset state
+    localStorage.setItem('habitData', JSON.stringify(habitData));
+}
+
+// Call the reset function when the page loads
+document.addEventListener('DOMContentLoaded', resetHabitsIfNewDay);
+
+
+
+function getTasks(section) {
+    const tasks = [];
+    const taskElements = document.querySelectorAll(`#${section}Tasks li`);
+    taskElements.forEach(task => {
+        const taskName = task.textContent.trim().split(' ')[0]; // Extract task name
+        const points = parseInt(task.querySelector('input').dataset.points, 10);
+        tasks.push({ name: taskName, points });
+    });
+    return tasks;
+}
+
+function getLogList() {
+    const logs = [];
+    const logItems = document.querySelectorAll('#logList li');
+    logItems.forEach(log => {
+        logs.push(log.textContent);
+    });
+    return logs;
+}
+
+function saveData() {
+    // Initialize data object for saving
+    const data = {
+        sectionPoints,
+        sectionLevels,
+        taskLogs, 
+        tasks: {},  // Object to store tasks for each section
+        habits: {}  // Object to store habits for each section
+    };
+
+    // Load habitData from localStorage to ensure it's available
+    const habitData = JSON.parse(localStorage.getItem('habitData')) || {};
+
+
+
+    // Save tasks
+    document.querySelectorAll('[id$="Tasks"]').forEach(taskList => {
+        const section = taskList.id.replace('Tasks', '');
+        const taskElements = taskList.querySelectorAll('li');
+        data.tasks[section] = Array.from(taskElements).map(task => ({
+            html: task.innerHTML  // Save the entire HTML content of each task
+        }));
+    });
+
+   // Save habits (with streaks, checkbox state, and lastChecked date)
+    document.querySelectorAll('[id$="HabitsTableBody"]').forEach(tableBody => {
+        const section = tableBody.id.replace('HabitsTableBody', '');
+        const rows = tableBody.querySelectorAll('tr');
+        data.habits[section] = Array.from(rows).map(row => {
+            const habit = row.querySelector('input').getAttribute('data-habit');
+            const isChecked = row.querySelector('input').checked;
+            const streak = row.querySelector('.streak').innerText;
+            const lastChecked = new Date().toISOString().split('T')[0]; // Today's date
+
+            return {
+                html: row.innerHTML,
+                streak: streak,
+                checked: isChecked,
+                lastChecked: lastChecked,
+            };
+        });
+    });
+
+    // Save the To-Do list to localStorage
+    const todos = [];
+    document.querySelectorAll('#todoItems li').forEach((item) => {
+        todos.push(item.innerText.replace('❌', '').trim());
+    });
+    localStorage.setItem('todos', JSON.stringify(todos));
+
+    // Save the To-Buy lists for each category
+    ['food', 'medicines', 'clothing', 'others'].forEach((category) => {
+        const tobuys = [];
+        document.querySelectorAll(`#${category}Items li`).forEach((item) => {
+            tobuys.push(item.innerText.replace('❌', '').trim());
+        });
+        localStorage.setItem(`${category}Items`, JSON.stringify(tobuys));
+    });
+
+
+    // Save all progress data to localStorage
+    localStorage.setItem('progressTrackerData', JSON.stringify(data));
+
+    // Debugging: Check if data is saved properly
+    console.log("Data saved to localStorage.");
+    
+  
+}
+function loadData() {
+    const savedData = localStorage.getItem('progressTrackerData');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        Object.assign(sectionPoints, data.sectionPoints);
+        Object.assign(sectionLevels, data.sectionLevels);
+        taskLogs = data.taskLogs || []; // Load taskLogs from saved data
+
+  // Load section points from saved data, avoiding reset to zero
+        if (data.sectionPoints) {
+            Object.keys(sectionPoints).forEach(section => {
+                sectionPoints[section] = data.sectionPoints[section] || 0; // Assign loaded points or 0 if not present
+            });
+        }
+
+                 // Update section points and levels
+        Object.keys(sectionPoints).forEach(section => {
+            updateSection(section);
+        });
+      
+
+        // Load tasks
+        Object.keys(data.tasks).forEach(section => {
+            loadTasks(section, data.tasks[section]);
+        });
+
+
+         // Load the task logs
+        taskLogs = data.taskLogs || []; // Load the task logs from local storage
+        const logList = document.getElementById('logList');
+        logList.innerHTML = ''; // Clear existing log list
+        
+        taskLogs.forEach(log => {
+            const newLog = document.createElement('li');
+            newLog.textContent = `Completed task "${log.taskName}" in ${log.section} section with ${log.points} points on ${log.timeStamp}`;
+            logList.appendChild(newLog);
+        });
+        
+          // Load taskLogs from saved data
+        taskLogs = data.taskLogs || [];
+
+        // Retrieve the saved selected date or use today's date if none is saved
+        const selectedDate = localStorage.getItem('selectedDate') || new Date().toLocaleDateString();
+
+        // Filter and display tasks for the selected date
+        filterTasksByDate(selectedDate);
+
+           // Load the To-Do list from localStorage
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    const todoList = document.getElementById('todoItems');
+    todoList.innerHTML = '';
+    todos.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            ${todo}
+            <button onclick="deleteTodo(${index})">❌</button>
+        `;
+        todoList.appendChild(li);
+    });
+    
+ // Load the To-Buy lists for each category
+    ['food', 'medicines', 'clothing', 'others'].forEach((category) => {
+        const tobuys = JSON.parse(localStorage.getItem(`${category}Items`)) || [];
+        const tobuyList = document.getElementById(`${category}Items`);
+        tobuyList.innerHTML = '';
+        tobuys.forEach((tobuy, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${tobuy}
+                <button onclick="deleteTobuy(${index}, '${category}')">❌</button>
+            `;
+            tobuyList.appendChild(li);
+        });
+    });
+
+
+        // Load tasks and update points
+        Object.keys(data.tasks).forEach(section => {
+            loadTasks(section, data.tasks[section]);
+        });
+
+        // Load habits and update points
+        if (data.habits) {
+            Object.keys(data.habits).forEach(section => {
+                loadHabits(section, data.habits[section]);
+            });
+        }
+
+        // Update the UI with new points
+        updateMainDashboard();
+
+        alert('Progress loaded!');
+    } else {
+        alert('No saved data found.');
+    }
+}
+        
+        
+
+function handleDateSelection(event) {
+    const selectedDate = event.target.value;  // Get the selected date
+    localStorage.setItem('selectedDate', selectedDate); // Save the selected date to localStorage
+    filterTasksByDate(selectedDate);  // Filter tasks based on selected date
+}
+function loadTasks(section, tasks) {
+    const taskList = document.getElementById(`${section}Tasks`);
+    taskList.innerHTML = '';  // Clear existing tasks
+    tasks.forEach(task => {
+        const newTask = document.createElement('li');
+        newTask.innerHTML = task.html;  // Restore full HTML content
+        taskList.appendChild(newTask);
+    });
+}
+
+
+// Load habits (restore streaks and lastChecked date)
+// Function to load habits, restore streaks, and checkbox states
+function loadHabits(section, habits) {
+    const tableBody = document.getElementById(`${section}HabitsTableBody`);
+    tableBody.innerHTML = '';  // Clear existing habits
+    habits.forEach(habit => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = habit.html;  // Restore full HTML content
+
+        // Restore streak and checkbox state
+        const streakElement = newRow.querySelector('.streak');
+        streakElement.innerText = habit.streak;
+
+        const checkbox = newRow.querySelector('input[type="checkbox"]');
+        checkbox.checked = habit.checked;
+
+        tableBody.appendChild(newRow);
+    });
+}
+
+
+
+
+        // Event listener to close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        };
+        
+ function addTodo() {
+        const input = document.getElementById('todoInput');
+        const task = input.value.trim();
+        if (task) {
+            const listItem = document.createElement('li');
+            listItem.textContent = task;
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = '❌';
+            deleteButton.onclick = () => listItem.remove();
+            listItem.appendChild(deleteButton);
+            document.getElementById('todoItems').appendChild(listItem);
+            input.value = '';
+        }
+    }
+    
+    
+function deleteTodo(index) {
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    todos.splice(index, 1);
+    localStorage.setItem('todos', JSON.stringify(todos));
+    
+    // Reload the data to reflect changes
+    loadData();
+}
+
+function showSelectedList() {
+    const selectedCategory = document.getElementById('categorySelect').value;
+
+    // Hide all lists first
+    const categories = ['food', 'medicines', 'clothing', 'others'];
+    categories.forEach(category => {
+        document.getElementById(`${category}Items`).style.display = 'none';
+        document.getElementById(`${category}Header`).style.display = 'none';
+    });
+
+    // Show only the selected category list
+    document.getElementById(`${selectedCategory}Items`).style.display = 'block';
+    document.getElementById(`${selectedCategory}Header`).style.display = 'block';
+}
+
+function addTobuy() {
+    const input = document.getElementById('tobuyInput');
+    const task = input.value.trim();
+    const category = document.getElementById('categorySelect').value;
+
+    const categoryList = document.getElementById(`${category}Items`);
+
+    if (task && categoryList) {
+        const listItem = document.createElement('li');
+        listItem.textContent = task;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '❌';
+        deleteButton.onclick = () => listItem.remove();
+
+        listItem.appendChild(deleteButton);
+        categoryList.appendChild(listItem);
+
+        input.value = '';
+    } else {
+        console.error('Category list not found!');
+    }
+}
+
+// Hide all lists by default
+document.addEventListener('DOMContentLoaded', function() {
+    showSelectedList();
+});
+
+function deleteTodo(index) {
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    todos.splice(index, 1);
+    localStorage.setItem('todos', JSON.stringify(todos));
+    
+    // Reload the data to reflect changes
+    loadData();
+}
+
+function deleteTobuy(index, category) {
+    const tobuys = JSON.parse(localStorage.getItem(`${category}Items`)) || [];
+    tobuys.splice(index, 1);
+    localStorage.setItem(`${category}Items`, JSON.stringify(tobuys));
+    
+    // Reload the data to reflect changes
+    loadData();
+}
+
+
+const quotes = [
+    "The pain you feel today is the strength you feel tomorrow. For every challenge encountered, there is opportunity for growth. — Unknown",
+    "The world breaks everyone, and afterward, some are strong at the broken places. — Ernest Hemingway",
+    "Life is what happens when you're busy making other plans. — John Lennon",
+    "Most people die at 25 and aren't buried until they’re 75. — Benjamin Franklin",
+    "You will never change your life until you change something you do daily. — Mike Murdock",
+    "If you want something you’ve never had, you must be willing to do something you’ve never done. — Thomas Jefferson",
+    "The greatest glory in living lies not in never falling, but in rising every time we fall. — Nelson Mandela",
+    "It's not whether you get knocked down, it's whether you get up. — Vince Lombardi",
+    "You’re not stuck. You’re just choosing to be stuck. — Unknown",
+    "Most of the important things in the world have been accomplished by people who have kept on trying when there seemed to be no hope at all. — Dale Carnegie"
+];
+
+function getDailyQuote() {
+    const quoteText = document.getElementById('quote-text');
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    quoteText.textContent = quotes[randomIndex];
+}
+// script.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadMoodData();
+    updateMoodHistory();
+});
+
+const moodHistory = [];
+
+function addMood(mood) {
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    moodHistory.push({ date: today, mood });
+    saveMoodData();
+    updateMoodHistory();
+}
+
+function updateMoodHistory() {
+    const moodHistoryDiv = document.getElementById('moodHistory');
+    moodHistoryDiv.innerHTML = '';
+
+    moodHistory.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.textContent = `${entry.date}: ${entry.mood}`;
+        
+        // Create cross button
+        const clearButton = document.createElement('button');
+        clearButton.textContent = '✖';
+        clearButton.className = 'clear-button';
+        clearButton.onclick = () => clearMoodEntry(index);
+        
+        div.appendChild(clearButton);
+        moodHistoryDiv.appendChild(div);
+    });
+}
+
+function clearMoodEntry(index) {
+    if (confirm("Are you sure you want to clear this mood entry?")) {
+        moodHistory.splice(index, 1); // Remove the entry at the specified index
+        saveMoodData();
+        updateMoodHistory();
+    }
+}
+
+function clearHistory() {
+    if (confirm("Are you sure you want to clear all mood history?")) {
+        moodHistory.length = 0; // Clear the entire array
+        saveMoodData();
+        updateMoodHistory();
+    }
+}
+
+function saveMoodData() {
+    localStorage.setItem('moodHistory', JSON.stringify(moodHistory));
+}
+
+function loadMoodData() {
+    const savedMoodHistory = localStorage.getItem('moodHistory');
+    if (savedMoodHistory) {
+        moodHistory.push(...JSON.parse(savedMoodHistory));
+    }
+    updateMoodHistory();
+}
+// Function to open the tips pop-up box
+function openTipsPopup() {
+    document.getElementById('tipsPopup').style.display = 'flex';
+}
+
+// Function to close the tips pop-up box
+function closeTipsPopup() {
+    document.getElementById('tipsPopup').style.display = 'none';
+}
+
+// Function to save tips data to local storage
+function saveTipsData() {
+    // Get the values from the text areas
+    const tips = document.getElementById('tipsText').value;
+    const additionalTips = document.getElementById('additionalTips').value;
+
+    // Save the values to local storage
+    localStorage.setItem('tips', tips);
+    localStorage.setItem('additionalTips', additionalTips);
+
+    // Log saved data for debugging
+    console.log('Saved Tips:', tips);
+    console.log('Additional Tips:', additionalTips);
+
+    // Close the pop-up after saving
+    closeTipsPopup();
+}
+
+// Function to load tips data from local storage
+function loadTipsData() {
+    // Get the values from local storage
+    const savedTips = localStorage.getItem('tips');
+    const savedAdditionalTips = localStorage.getItem('additionalTips');
+
+    // Set the values to the text areas if they exist
+    if (savedTips) {
+        document.getElementById('tipsText').value = savedTips;
+    }
+    if (savedAdditionalTips) {
+        document.getElementById('additionalTips').value = savedAdditionalTips;
+    }
+}
+
+// Add event listeners for the buttons
+document.getElementById('tipsButton').addEventListener('click', openTipsPopup);
+document.getElementById('closeButton').addEventListener('click', closeTipsPopup);
+document.getElementById('saveTipsButton').addEventListener('click', saveTipsData);
+
+// Call the loadTipsData function when the page loads
+window.addEventListener('load', loadTipsData);
+
+// Function to open the problems pop-up box
+function openProblemsPopup() {
+    document.getElementById('problemsPopup').style.display = 'flex';
+}
+
+// Function to close the problems pop-up box
+function closeProblemsPopup() {
+    document.getElementById('problemsPopup').style.display = 'none';
+}
+
+// Function to save problems data to local storage
+function saveProblemsData() {
+    // Get the values from the text areas
+    const problems = document.getElementById('problemsText').value;
+    const additionalProblems = document.getElementById('additionalProblems').value;
+
+    // Save the values to local storage
+    localStorage.setItem('problems', problems);
+    localStorage.setItem('additionalProblems', additionalProblems);
+
+    // Log saved data for debugging
+    console.log('Saved Problems:', problems);
+    console.log('Additional Problems:', additionalProblems);
+
+    // Close the pop-up after saving
+    closeProblemsPopup();
+}
+
+// Function to load problems data from local storage
+function loadProblemsData() {
+    // Get the values from local storage
+    const savedProblems = localStorage.getItem('problems');
+    const savedAdditionalProblems = localStorage.getItem('additionalProblems');
+
+    // Set the values to the text areas if they exist
+    if (savedProblems) {
+        document.getElementById('problemsText').value = savedProblems;
+    }
+    if (savedAdditionalProblems) {
+        document.getElementById('additionalProblems').value = savedAdditionalProblems;
+    }
+}
+
+// Add event listeners for the buttons
+document.getElementById('problemsButton').addEventListener('click', openProblemsPopup);
+document.getElementById('closeProblemsButton').addEventListener('click', closeProblemsPopup);
+document.getElementById('saveProblemsButton').addEventListener('click', saveProblemsData);
+
+// Call the loadProblemsData function when the page loads
+window.addEventListener('load', loadProblemsData);
+
+
+// Function to open the health pop-up box
+function openHealthPopup() {
+    document.getElementById('healthPopup').style.display = 'flex';
+}
+
+// Function to close the health pop-up box
+function closeHealthPopup() {
+    document.getElementById('healthPopup').style.display = 'none';
+}
+
+// Function to save health data to local storage
+function saveHealthData() {
+    // Get the values from the text areas
+    const healthTips = document.getElementById('healthText').value;
+    const additionalHealth = document.getElementById('additionalHealth').value;
+    const additionalHealth2 = document.getElementById('additionalHealth2').value;
+
+    // Save the values to local storage
+    localStorage.setItem('healthTips', healthTips);
+    localStorage.setItem('additionalHealth', additionalHealth);
+     localStorage.setItem('additionalHealth2', additionalHealth2);
+
+
+    // Log saved data for debugging
+    console.log('Saved Health Tips:', healthTips);
+    console.log('Additional Health Tips:', additionalHealth);
+
+    // Close the pop-up after saving
+    closeHealthPopup();
+}
+
+// Function to load health data from local storage
+function loadHealthData() {
+    // Get the values from local storage
+    const savedHealthTips = localStorage.getItem('healthTips');
+    const savedAdditionalHealth = localStorage.getItem('additionalHealth');
+    const savedAdditionalHealth2 = localStorage.getItem('additionalHealth2');
+
+
+    // Set the values to the text areas if they exist
+    if (savedHealthTips) {
+        document.getElementById('healthText').value = savedHealthTips;
+    }
+    if (savedAdditionalHealth) {
+        document.getElementById('additionalHealth').value = savedAdditionalHealth;
+    }
+    if (savedAdditionalHealth2) {
+        document.getElementById('additionalHealth2').value = savedAdditionalHealth2;
+    }
+}
+
+// Add event listeners for the buttons
+document.getElementById('healthButton').addEventListener('click', openHealthPopup);
+document.getElementById('closeHealthButton').addEventListener('click', closeHealthPopup);
+document.getElementById('saveHealthButton').addEventListener('click', saveHealthData);
+
+// Call the loadHealthData function when the page loads
+window.addEventListener('load', loadHealthData);
+ 
+  function exportLogToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("Task Log Report", 14, 20);
+
+      const logItems = document.querySelectorAll('#logList li');
+      let y = 30;
+
+      if (logItems.length === 0) {
+          doc.text("No logs available.", 14, y);
+          doc.save('task_log_report.pdf');
+          return;
+      }
+
+      logItems.forEach((logItem, index) => {
+          if (y > 260) {
+              doc.addPage();
+              y = 20;
+          }
+          doc.setFontSize(12);
+          doc.text(logItem.textContent, 14, y);
+          y += 10;
+      });
+
+      doc.save('task_log_report.pdf');
+  }
+  function exportLogToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Title for the PDF
+    doc.setFontSize(18);
+    doc.text("Task Log Report", 14, 20);
+
+    const logItems = document.querySelectorAll('#logList li');
+    let y = 30; // Initial vertical position for text
+
+    if (logItems.length === 0) {
+        doc.text("No logs available.", 14, y);
+        doc.save('task_log_report.pdf');
+        return;
+    }
+
+    logItems.forEach((logItem, index) => {
+        const text = logItem.textContent;
+        const margin = 14; // Margin from the left
+        const pageHeight = 280; // Page height limit before adding a new page
+
+        // Wrap text
+        const lines = doc.splitTextToSize(text, 180); // 180 is the maximum width for text
+
+        lines.forEach((line, lineIndex) => {
+            if (y + 10 > pageHeight) { // Check if there's space for the next line
+                doc.addPage(); // Add a new page
+                y = 20; // Reset y position for the new page
+            }
+            doc.setFontSize(12);
+            doc.text(line, margin, y);
+            y += 10; // Move down for the next line
+        });
+    });
+
+    doc.save('task_log_report.pdf'); // Save the PDF
+}
+
+      const swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1, // Show one note at a time
+        spaceBetween: 10, // Space between notes
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        // Prevent page scroll while swiping
+        touchMoveStopPropagation: false,
+        preventClicksPropagation: false,
+    });
+    // Get the modal element
+var moodTrackerModal = document.getElementById("moodTrackerModal");
+
+// Get the button that opens the modal
+var openMoodTrackerBtn = document.getElementById("openMoodTrackerBtn");
+
+// Get the <span> element that closes the modal
+var closeMoodTracker = document.getElementById("closeMoodTracker");
+
+// When the user clicks the button, open the modal 
+openMoodTrackerBtn.onclick = function() {
+    moodTrackerModal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+closeMoodTracker.onclick = function() {
+    moodTrackerModal.style.display = "none";
+}
+
+// When the user clicks anywhere outside the modal, close it
+window.onclick = function(event) {
+    if (event.target == moodTrackerModal) {
+        moodTrackerModal.style.display = "none";
+    }
+}
+function openProfileModal() {
+    loadUserData(); // Load user data when opening the modal
+    document.getElementById("profileModal").style.display = "block";
+}
+
+function closeProfileModal() {
+    document.getElementById("profileModal").style.display = "none";
+}
+
+// Load user data into the form
+function loadUserData() {
+    const name = localStorage.getItem("userName") || "";
+const age = localStorage.getItem("userAge") || "";
+const height = localStorage.getItem("userHeight") || "";
+const weight = localStorage.getItem("userWeight") || ""; // New line for weight
+const profession = localStorage.getItem("userProfession") || "";
+const goal = localStorage.getItem("userGoal") || "";
+
+document.getElementById("name").value = name;
+document.getElementById("age").value = age;
+document.getElementById("height").value = height;
+document.getElementById("weight").value = weight; // Set weight value
+document.getElementById("profession").value = profession;
+document.getElementById("goal").value = goal;
+}
+
+// Save user data on form submission
+document.getElementById("userProfileForm").onsubmit = function(event) {
+    event.preventDefault(); // Prevent page reload
+    localStorage.setItem("userName", document.getElementById("name").value);
+    localStorage.setItem("userAge", document.getElementById("age").value);
+localStorage.setItem("userWeight", document.getElementById("weight").value); // New line for weight
+    localStorage.setItem("userHeight", document.getElementById("height").value);
+    localStorage.setItem("userProfession", document.getElementById("profession").value);
+    localStorage.setItem("userGoal", document.getElementById("goal").value);
+
+    closeProfileModal(); // Close the modal after saving
+};
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById("profileModal");
+    if (event.target === modal) {
+        closeProfileModal();
+    }
+};
+
+// Function to open the career pop-up box
+function openCareerPopup() {
+    document.getElementById('careerPopup').style.display = 'flex';
+}
+
+// Function to close the career pop-up box
+function closeCareerPopup() {
+    document.getElementById('careerPopup').style.display = 'none';
+}
+
+// Function to save career tips to local storage
+function saveCareerData() {
+    const careerTips = document.getElementById('careerText').value;
+    localStorage.setItem('careerTips', careerTips);
+    console.log('Saved Career Tips:', careerTips);
+    closeCareerPopup();
+}
+
+// Function to load career tips from local storage
+function loadCareerData() {
+    const savedCareerTips = localStorage.getItem('careerTips');
+    if (savedCareerTips) {
+        document.getElementById('careerText').value = savedCareerTips;
+    }
+}
+
+// Event listeners
+document.getElementById('careerButton').addEventListener('click', openCareerPopup);
+document.getElementById('closeCareerButton').addEventListener('click', closeCareerPopup);
+document.getElementById('saveCareerButton').addEventListener('click', saveCareerData);
+window.addEventListener('load', loadCareerData);
+
+// Function to open the social pop-up box
+function openSocialPopup() {
+    document.getElementById('socialPopup').style.display = 'flex';
+}
+
+// Function to close the social pop-up box
+function closeSocialPopup() {
+    document.getElementById('socialPopup').style.display = 'none';
+}
+
+// Function to save social tips to local storage
+function saveSocialData() {
+    const socialTips = document.getElementById('socialText').value;
+    localStorage.setItem('socialTips', socialTips);
+    console.log('Saved Social Tips:', socialTips);
+    closeSocialPopup();
+}
+
+// Function to load social tips from local storage
+function loadSocialData() {
+    const savedSocialTips = localStorage.getItem('socialTips');
+    if (savedSocialTips) {
+        document.getElementById('socialText').value = savedSocialTips;
+    }
+}
+
+// Event listeners
+document.getElementById('socialButton').addEventListener('click', openSocialPopup);
+document.getElementById('closeSocialButton').addEventListener('click', closeSocialPopup);
+document.getElementById('saveSocialButton').addEventListener('click', saveSocialData);
+window.addEventListener('load', loadSocialData);
+
+// Function to open the finance pop-up box
+function openFinancePopup() {
+    document.getElementById('financePopup').style.display = 'flex';
+}
+
+// Function to close the finance pop-up box
+function closeFinancePopup() {
+    document.getElementById('financePopup').style.display = 'none';
+}
+
+// Function to save finance tips to local storage
+function saveFinanceData() {
+    const financeTips = document.getElementById('financeText').value;
+    localStorage.setItem('financeTips', financeTips);
+    console.log('Saved Finance Tips:', financeTips);
+    closeFinancePopup();
+}
+
+// Function to load finance tips from local storage
+function loadFinanceData() {
+    const savedFinanceTips = localStorage.getItem('financeTips');
+    if (savedFinanceTips) {
+        document.getElementById('financeText').value = savedFinanceTips;
+    }
+}
+
+// Event listeners
+document.getElementById('financeButton').addEventListener('click', openFinancePopup);
+document.getElementById('closeFinanceButton').addEventListener('click', closeFinancePopup);
+document.getElementById('saveFinanceButton').addEventListener('click', saveFinanceData);
+window.addEventListener('load', loadFinanceData);
+
+// Function to open the personal pop-up box
+function openPersonalPopup() {
+    document.getElementById('personalPopup').style.display = 'flex';
+}
+
+// Function to close the personal pop-up box
+function closePersonalPopup() {
+    document.getElementById('personalPopup').style.display = 'none';
+}
+
+// Function to save personal tips to local storage
+function savePersonalData() {
+    const personalTips = document.getElementById('personalText').value;
+    localStorage.setItem('personalTips', personalTips);
+    console.log('Saved Personal Tips:', personalTips);
+    closePersonalPopup();
+}
+
+// Function to load personal tips from local storage
+function loadPersonalData() {
+    const savedPersonalTips = localStorage.getItem('personalTips');
+    if (savedPersonalTips) {
+        document.getElementById('personalText').value = savedPersonalTips;
+    }
+}
+
+// Event listeners
+document.getElementById('personalButton').addEventListener('click', openPersonalPopup);
+document.getElementById('closePersonalButton').addEventListener('click', closePersonalPopup);
+document.getElementById('savePersonalButton').addEventListener('click', savePersonalData);
+window.addEventListener('load', loadPersonalData);
+
+// Function to open the mental pop-up box
+function openMentalPopup() {
+    document.getElementById('mentalPopup').style.display = 'flex';
+}
+
+// Function to close the mental pop-up box
+function closeMentalPopup() {
+    document.getElementById('mentalPopup').style.display = 'none';
+}
+
+// Function to save mental tips to local storage
+function saveMentalData() {
+    const mentalTips = document.getElementById('mentalText').value;
+    localStorage.setItem('mentalTips', mentalTips);
+    console.log('Saved Mental Tips:', mentalTips);
+    closeMentalPopup();
+}
+
+// Function to load mental tips from local storage
+function loadMentalData() {
+    const savedMentalTips = localStorage.getItem('mentalTips');
+    if (savedMentalTips) {
+        document.getElementById('mentalText').value = savedMentalTips;
+    }
+}
+
+function collectData() {
+    const data = {
+        sectionPoints,
+        sectionLevels,
+        taskLogs: [], // Initialize task logs
+        tasks: {},
+        habits: {},
+        toDoList: [], // Initialize to-do list data
+        toBuyList: {}, // Initialize to-buy list data
+        userProfile: {
+            name: localStorage.getItem('userName') || "",
+            age: localStorage.getItem('userAge') || "",
+            height: localStorage.getItem('userHeight') || "",
+            weight: localStorage.getItem('userWeight') || "",
+            profession: localStorage.getItem('userProfession') || "",
+            goal: localStorage.getItem('userGoal') || ""
+        }
+    };
+
+    // Collect tasks from all sections
+    document.querySelectorAll('[id$="Tasks"]').forEach(taskList => {
+        const section = taskList.id.replace('Tasks', '');
+        const taskElements = taskList.querySelectorAll('li');
+        data.tasks[section] = Array.from(taskElements).map(task => ({
+            html: task.innerHTML
+        }));
+    });
+
+    // Collect habits
+    document.querySelectorAll('[id$="HabitsTableBody"]').forEach(tableBody => {
+        const section = tableBody.id.replace('HabitsTableBody', '');
+        const rows = tableBody.querySelectorAll('tr');
+        data.habits[section] = Array.from(rows).map(row => {
+            const habit = row.querySelector('input').getAttribute('data-habit');
+            const isChecked = row.querySelector('input').checked;
+            const streak = row.querySelector('.streak').innerText;
+
+            return {
+                html: row.innerHTML,
+                streak: streak,
+                checked: isChecked
+            };
+        });
+    });
+
+    // Collect task logs
+    data.taskLogs = taskLogs.map(log => ({
+        taskName: log.taskName,
+        section: log.section,
+        points: log.points,
+        timeStamp: log.timeStamp
+    }));
+
+    // Collect to-do list items
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    data.toDoList = todos;
+
+    // Collect to-buy list items for each category
+    const categories = ['food', 'medicines', 'clothing', 'others'];
+    data.toBuyList = {};
+    categories.forEach(category => {
+        data.toBuyList[category] = JSON.parse(localStorage.getItem(`${category}Items`)) || [];
+    });
+
+    return data;
+}
+
+function exportToJSON() {
+    const data = collectData(); // Collect the data
+    const jsonData = JSON.stringify(data, null, 2); // Convert to JSON
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'progress-data.json'; // Set the file name
+    document.body.appendChild(a);
+    a.click(); // Automatically start the download
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); // Free memory
+}
+
+function importFromJSON() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'application/json';
+
+    fileInput.onchange = () => {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            const data = JSON.parse(event.target.result);
+            loadDataFromJSON(data); // Repopulate the page with imported data
+            alert("Data imported successfully!"); // Confirmation alert
+        };
+
+        reader.readAsText(file);
+    };
+
+    document.body.appendChild(fileInput);
+    fileInput.click(); // Trigger file selection
+    document.body.removeChild(fileInput);
+}
+// Function to load data into the page
+function loadDataFromJSON(data) {
+    // Load user profile data and rewrite local storage
+    if (data.userProfile) {
+        localStorage.setItem('userName', data.userProfile.name);
+        localStorage.setItem('userAge', data.userProfile.age);
+        localStorage.setItem('userHeight', data.userProfile.height);
+        localStorage.setItem('userWeight', data.userProfile.weight);
+        localStorage.setItem('userProfession', data.userProfile.profession);
+        localStorage.setItem('userGoal', data.userProfile.goal);
+    }
+
+    // Load section points and levels
+    Object.assign(sectionPoints, data.sectionPoints); 
+    Object.assign(sectionLevels, data.sectionLevels); 
+
+    // Call updateSection for all relevant sections
+    Object.keys(sectionPoints).forEach(section => {
+        updateSection(section); // Update UI for each section
+    });
+    
+   
+
+ 
+
+    // Load tasks
+    Object.keys(data.tasks).forEach(section => {
+        loadTasks(section, data.tasks[section]);
+    });
+
+    // Load habits
+    Object.keys(data.habits).forEach(section => {
+        loadHabits(section, data.habits[section]);
+    });
+    
+
+    // Load task logs
+    taskLogs = data.taskLogs || [];
+    const logList = document.getElementById('logList');
+    logList.innerHTML = ''; // Clear existing log list
+    taskLogs.forEach(log => {
+        const newLog = document.createElement('li');
+        newLog.textContent = `Completed task "${log.taskName}" in ${log.section} section with ${log.points} points on ${log.timeStamp}`;
+        logList.appendChild(newLog);
+    });
+
+    // Load the To-Do list
+    const todoList = document.getElementById('todoItems');
+    todoList.innerHTML = '';
+    data.toDoList.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            ${todo}
+            <button onclick="deleteTodo(${index})">❌</button>
+        `;
+        todoList.appendChild(li);
+    });
+
+    // Load the To-Buy lists for each category
+    const categories = ['food', 'medicines', 'clothing', 'others'];
+    categories.forEach((category) => {
+        const tobuyList = document.getElementById(`${category}Items`);
+        tobuyList.innerHTML = '';
+        data.toBuyList[category].forEach((tobuy, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${tobuy}
+                <button onclick="deleteTobuy(${index}, '${category}')">❌</button>
+            `;
+            tobuyList.appendChild(li);
+        });
+    });
+
+    // Update the main dashboard
+    updateMainDashboard();
+}
+
+// Event listeners
+document.getElementById('mentalButton').addEventListener('click', openMentalPopup);
+document.getElementById('closeMentalButton').addEventListener('click', closeMentalPopup);
+document.getElementById('saveMentalButton').addEventListener('click', saveMentalData);
+window.addEventListener('load', loadMentalData);
+
+window.onload = function() {
+    loadData();
+};
+
+let saveInterval = setInterval(() => {
+    saveData();
+}, 1000); // Save every second
+
+window.onbeforeunload = () => {
+    clearInterval(saveInterval); // Clear the interval on unload
+}; 
+
+
+
+
+
+</script>
+</body>
+</body></html>
+
+
+
