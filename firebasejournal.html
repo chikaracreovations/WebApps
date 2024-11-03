@@ -517,20 +517,49 @@ document.getElementById('signUpButton').addEventListener('click', async () => {
         
     }
 });
+// Function to clear all form fields
+function clearFormFields() {
+    const fields = [
+        'calories', 'sleep', 'sleepStart', 'sleepEnd', 'medicines', 
+        'medicinescount', 'water', 'workouthours', 'agenda', 
+        'journal', 'thankful', 'lessons', 'sucked', 
+        'improvement', 'accomplishments', 'screenTime'
+    ];
+
+    // Clear fields in the main form
+    fields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.value = ''; // Clear the value if the element exists
+        }
+    });
+
+    // Clear fields in the authentication modal
+    const authFields = ['email', 'password']; // Use the IDs that match your modal's input fields
+    authFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.value = ''; // Clear the value if the element exists
+        }
+    });
+}
+
 // Logout functionality
 document.getElementById('logoutButton').addEventListener('click', async () => {
     try {
         await signOut(auth);
         console.log('User signed out.');
+        
+        // Clear all form fields
+        clearFormFields();
+
+        // Update UI
         document.getElementById('logoutButton').style.display = 'none';
-        document.getElementById('openAuthModal').style.display = 'block';
+        document.getElementById('openAuthModal').style.display = 'block'; // Show the authentication modal
     } catch (error) {
         console.error("Logout error:", error.message);
     }
 });
-
-
-
 window.addEventListener('DOMContentLoaded', async () => {
     const dateInput = document.getElementById('date');
     const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
