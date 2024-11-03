@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+
+
+   
+
+    <title>Daily Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px #aaa;
+            background-color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+          h4 {
+            font-size: 12px;
+            color: gray;
+            font-style: italic;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        /* Light colors based on color psychology */
+        #calories {
+            background-color: #ffe0b2; /* Light cyan for refreshment */
+        }
+        #sleep {
+            background-color: #e1bee7; /* Light amber for comfort */
+        }
+        #medicines {
+            background-color: #d4edda; /* Light pink for care */
+        }
+        #water {
+            background-color: #e0f7fa; /* Light purple for calmness */
+        }
+        #agenda {
+            background-color: #ffe0b2; /* Light amber for clarity */
+        }
+        
+        #screenTime {
+          background-color: #ffebee; 
+        }
+        #habits {
+          background-color: #12334667
+        }
+        
+        .journal, #thankful, #lessons, #sucked, #improvement, #accomplishments {
+            background-color: #e1f5fe; /* Light blue for serenity */
+            border: 1px solid #0288d1;
+            border-radius: 5px;
+            height: 150px; /* Fixed height for text boxes */
+            resize: none;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .day-checkboxes {
+    display: flex;
+    gap: 10px;
+}
+
+.circle {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    text-align: center;
+    line-height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked + .circle {
+    background-color: #4CAF50; /* Change to desired color */
+    color: white;
+}
+#imageModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#modalImage {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+}
+
+#closeModal {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* Container to scope authentication-specific styles */
+.auth-module {
+    font-family: Arial, sans-serif;
+}
+
+/* Basic styling for modal */
+.auth-modal {
+    display: none; /* Initially hidden */
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.auth-modal-content {
+    position: absolute; /* Position it absolutely */
+    left: 50%; /* Center horizontally */
+    top: 50%; /* Center vertically */
+    transform: translate(-50%, -50%); /* Shift it back to center */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px; /* Fixed width for modal content */
+    text-align: center;
+}
+.auth-module input {
+    margin: 5px 0;
+    padding: 10px;
+    width: 90%;
+}
+
+.auth-module button {
+    margin: 5px 0;
+    padding: 10px;
+    width: 100%;
+}
+
+.auth-error {
+    color: red;
+}
+
+#logoutButton {
+    display: none; /* Hide logout button initially */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+  
+  #ChikaraCreovations
+  
+  
+    <div class="container">
+        <h2>Daily Summary</h2>
+        <input type="date" id="date" onchange="loadSummary()" />
+        
+     <!-- Sign-In/Sign-Up Modal within a specific container class -->
+<div class="auth-module">
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+              <span id="closeAuthModal" class="close">&times;</span> <!-- Close button -->
+            
+            <h2>Sign In / Sign Up</h2>
+            
+            <form id="authForm">
+                <input type="email" id="email" placeholder="Email" required />
+                <input type="password" id="password" placeholder="Password" required />
+                <button type="button" id="signInButton">Sign In</button>
+                <button type="button" id="signUpButton">Sign Up</button>
+                <p id="authError" class="auth-error"></p>
+            </form>
+        </div>
+    </div>
+    
+    
+    
+    
+
+    <!-- Buttons to trigger modal and logout -->
+    <button id="openAuthModal" class="auth-button">Login</button>
+    <button id="logoutButton" class="auth-button">Logout</button>
+</div>   
+        
+<div>
+    <h3>Sleep Hours:</h3>
+    <input type="number" id="sleep" placeholder="Total Sleep Hours" />
+</div>
+<div>
+    <h3>Sleep Start Time:</h3>
+    <input type="time" id="sleepStart" />
+</div>
+<div>
+    <h3>Sleep End Time:</h3>
+    <input type="time" id="sleepEnd" />
+</div>
+        <div>
+            <h3>Water Intake (ml):</h3>
+            <input type="number" id="water" step="0.1" />
+        </div>
+        
+        <div>
+            <h3>Today's Calories:</h3>
+            <input type="number" id="calories" />
+    <button onclick="openHealthifyApp()" style="background-color: peachpuff;
+    color: dimgrey; border: 1px solid #ccc; padding: 7px 7px; font-size: 10px; cursor: pointer;">
+        Open Healthify
+    </button>
+        </div>
+        
+        
+                <div>
+            <h3>Today's Habits:</h3>
+            <input type="number" id="habits" placeholder="No. Of Habits Completed "/>
+        </div>
+       
+        <div>
+            <h3>Screen Time (hours):</h3>
+            <input type="number" id="screenTime" step="0.1" />
+        </div>
+
+        <div>
+            <h3>Medicines Taken:</h3>
+             <input type="number" id="medicinescount" placeholder="Enter the number of medicines taken">
+            <textarea id="medicines" rows="3"
+             placeholder="Enter the names of the medicines taken"
+            ></textarea>
+            
+        </div>
+        
+        <div>
+          <h3> Workout Duration (Minutes): </h3>
+          <input type ="number" id ="workouthours" placeholder ="Enter Workout Duration in Hours"></input>
+          
+        </div>
+        
+        
+
+     <div>
+ <!-- Button to open the app -->
+    <button class="open-app-btn" onclick="openFitNotes()"
+    style="background-color: lightgray;
+    color: dimgrey; border: 1px solid #ccc; padding: 3px 3px; font-size: 10px; cursor: pointer;">Open FitNotes</button>
+</div>
+
+<div>
+    <h4>Select Workout Days</h4>
+    <div class="day-checkboxes">
+        <label>
+            <input type="checkbox" id="monday">
+            <span class="circle">M</span>
+        </label>
+        <label>
+            <input type="checkbox" id="tuesday">
+            <span class="circle">T</span>
+        </label>
+        <label>
+            <input type="checkbox" id="wednesday">
+            <span class="circle">W</span>
+        </label>
+        <label>
+            <input type="checkbox" id="thursday">
+            <span class="circle">T</span>
+        </label>
+        <label>
+            <input type="checkbox" id="friday">
+            <span class="circle">F</span>
+        </label>
+        <label>
+            <input type="checkbox" id="saturday">
+            <span class="circle">S</span>
+        </label>
+        <label>
+            <input type="checkbox" id="sunday">
+            <span class="circle">S</span>
+        </label>
+    </div>
+</div>
+
+
+
+
+        <div>
+            <h3>Today's Agenda/To- Do List:</h3>
+            <textarea id="agenda" rows="12"></textarea>
+        </div>
+
+        <div>
+            <h3>Today I am thankful for:</h3>
+            <h4> (Gratitude Journaling ) </h4>
+            <textarea id="thankful" rows="3"
+            placeholder = "What are three things that I am grateful for today?"
+            ></textarea>
+        </div>
+        
+
+    
+  
+        
+        
+
+        <div>
+            <h3>Today's Journal and Reflections:</h3>
+            <h4> (Feelings Journal)</h4>
+            <textarea id="journal" class="journal" rows="6"
+            placeholder = 
+  "What were the highlights of my day?
+  
+How did I feel today, and what influenced those feelings?
+
+What steps did I take today to work towards my goals?"
+
+            ></textarea>
+        </div>
+        
+
+
+
+        <div>
+            <h3>Today's Lessons:</h3>
+            <textarea id="lessons" rows="3"
+            placeholder = "What new insights or lessons did I learn today?"
+            ></textarea>
+        </div>
+        <div>
+            <h3>Accomplishments / Completed Tasks:</h3>
+            <textarea id="accomplishments" rows="3" placeholder= "What did I achieve today, no matter how small?"
+            ></textarea>
+        </div>
+        
+        <div>
+            <h3>Things that sucked:</h3>
+             <textarea id="sucked" rows="3" placeholder="What challenges or setbacks did I face today?"></textarea>
+            </div>
+        
+        <div>
+            <h3>Areas for Improvement:</h3>
+            <textarea id="improvement" rows="3" placeholder =
+"What could I have done differently today?
+
+What is one thing I can work on for tomorrow?
+
+What mistakes did I make today, and what can I learn from them?"
+            ></textarea>
+        </div>
+      
+
+<label for="fileInput" style="background-color: black; color: white; border: 1px solid #ccc; padding: 9px 14px ; font-size: 9px; cursor: pointer; display: inline-block; border-radius: 5px;">
+    Import Summary
+</label>
+
+<!-- Hidden input file element -->
+<input type="file" id="fileInput" accept=".json" onchange="importSummary(event)" style="display: none;" />
+
+
+  
+   <button onclick="exportSummary()" style="background-color: black; color: white; border: 1px solid #ccc; padding: 8px 8px; font-size: 10px; cursor: pointer; display: inline-block;">
+    Export Summary
+</button>
+        <br>
+        
+<button onclick="saveSummary()">Save Summary</button>
+<button onclick="downloadPDF()">Download PDF</button>
+
+        
+
+
+
+        
+
+
+ </div>
+    
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  // Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+  import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+  import { getFirestore, collection, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD195VtbWw38Ec0wkZYfS1RA2hPGGniI4Y",
+    authDomain: "journal-9bc9e.firebaseapp.com",
+    projectId: "journal-9bc9e",
+    storageBucket: "journal-9bc9e.firebasestorage.app",
+    messagingSenderId: "626686703337",
+    appId: "1:626686703337:web:517672a8a226c79f072278",
+    measurementId: "G-EGVJMF9YCW"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const auth = getAuth(app); // Initialize Firebase Auth
+  
+// Initialize Firebase Authentication and get a reference to the service
+
+// Sign in functionality
+
+
+document.getElementById('signInButton').addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        console.log("User signed in:", userCredential.user);
+
+        // Set today's date
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today; // Set today's date
+
+        // Immediately load the summary for today
+         loadSummary(today); // Ensure you wait for this to complete
+    } catch (error) {
+        console.error("Error signing in:", error);
+        document.getElementById('authError').innerText = error.message;
+    }
+});
+
+
+
+// Sign up functionality
+document.getElementById('signUpButton').addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log('Account created and signed in:', user.email);
+        
+        // Hide the modal and show the logout button
+        document.getElementById('authModal').style.display = 'none';
+        document.getElementById('logoutButton').style.display = 'block';
+        document.getElementById('openAuthModal').style.display = 'none';
+        
+        // Call loadSummary after sign-up
+        loadSummary(); // Load summary for today's date
+    } catch (error) {
+        if (error.code === 'auth/email-already-in-use') {
+            document.getElementById('authError').textContent = "Account already exists. Please sign in.";
+        } else {
+            document.getElementById('authError').textContent = "Error signing up: " + error.message;
+        }
+        
+    }
+});
+// Logout functionality
+document.getElementById('logoutButton').addEventListener('click', async () => {
+    try {
+        await signOut(auth);
+        console.log('User signed out.');
+        document.getElementById('logoutButton').style.display = 'none';
+        document.getElementById('openAuthModal').style.display = 'block';
+    } catch (error) {
+        console.error("Logout error:", error.message);
+    }
+});
+
+
+
+window.addEventListener('DOMContentLoaded', async () => {
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    dateInput.value = today;
+
+    // Check if a user is signed in and load the summary if they are
+    const user = auth.currentUser;
+    if (user) {
+        await loadSummary(); // Load summary for the signed-in user
+    }
+});
+
+
+  // DOM element reference for auth modal
+  const authModal = document.getElementById("authModal");
+
+  // Check user authentication state and show/hide modal
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      authModal.style.display = "none"; // Hide modal if user is signed in
+    } else {
+      authModal.style.display = "block"; // Show modal if user is not signed in
+    }
+  });
+  
+  // Listen for changes in the user's sign-in state
+// Show modal when 'Login' button is clicked
+document.getElementById('openAuthModal').addEventListener('click', () => {
+    document.getElementById('authModal').style.display = 'flex';
+});
+
+// Close modal when clicking outside of modal content
+window.addEventListener('click', (event) => {
+    const modal = document.getElementById('authModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+document.getElementById('closeAuthModal').addEventListener('click', () => {
+    document.getElementById('authModal').style.display = 'none';
+});
+
+
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        console.log('User is signed in:', user.email);
+        document.getElementById('logoutButton').style.display = 'block';
+        document.getElementById('openAuthModal').style.display = 'none';
+        document.getElementById('authError').textContent = ''; // Clear errors
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').value = today; // Set date input
+        await loadSummary(today); // Load summary for today's date
+    } else {
+        console.log('No user is signed in.');
+        document.getElementById('logoutButton').style.display = 'none';
+        document.getElementById('openAuthModal').style.display = 'block';
+    }
+});
+  
+
+ // Update saveSummary to be user-specific
+async function saveSummary() {
+    const user = auth.currentUser; // Get current logged-in user
+    if (!user) {
+        
+
+        return;
+    }
+
+
+
+    const selectedDate = document.getElementById('date').value;
+    console.log('Selected Date for Saving:', selectedDate);
+
+    const summaryData = {
+        calories: document.getElementById('calories').value,
+        sleep: document.getElementById('sleep').value,
+        sleepStart: document.getElementById('sleepStart').value,
+        sleepEnd: document.getElementById('sleepEnd').value,
+        medicines: document.getElementById('medicines').value,
+        medicinescount: document.getElementById('medicinescount').value,
+        water: document.getElementById('water').value,
+        workouthours: document.getElementById('workouthours').value,
+        agenda: document.getElementById('agenda').value,
+        journal: document.getElementById('journal').value,
+        thankful: document.getElementById('thankful').value,
+        lessons: document.getElementById('lessons').value,
+        sucked: document.getElementById('sucked').value,
+        improvement: document.getElementById('improvement').value,
+        accomplishments: document.getElementById('accomplishments').value,
+        screenTime: document.getElementById('screenTime').value,
+    };
+
+    try {
+        // Use the user's uid in the document path to make it user-specific
+        await setDoc(doc(db, "summaries", user.uid, "dailySummaries", selectedDate), summaryData);
+        console.log("Summary successfully saved to Firebase for user:", user.email);
+        alert('Summary saved!');
+    } catch (error) {
+        console.error("Error saving summary:", error);
+    }
+}
+
+// Update loadSummary to be user-specific
+async function loadSummary() {
+    const user = auth.currentUser; // Get current logged-in user
+    if (!user) {
+        
+        return;
+    }
+
+    const selectedDate = document.getElementById('date').value;
+    console.log('Selected Date for Loading:', selectedDate);
+
+    if (!selectedDate) {
+        console.error("Error: No date selected for loading data.");
+        alert("Please select a valid date.");
+        return;
+    }
+
+    try {
+        // Use the user's uid in the document path to make it user-specific
+        const docRef = doc(db, "summaries", user.uid, "dailySummaries", selectedDate);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            console.log("Data loaded from Firebase:", data);
+
+            document.getElementById('calories').value = data.calories ?? '';
+            document.getElementById('sleep').value = data.sleep ?? '';
+            document.getElementById('sleepStart').value = data.sleepStart ?? '';
+            document.getElementById('sleepEnd').value = data.sleepEnd ?? '';
+            document.getElementById('medicines').value = data.medicines ?? '';
+            document.getElementById('medicinescount').value = data.medicinescount ?? '';
+            document.getElementById('water').value = data.water ?? '';
+            document.getElementById('workouthours').value = data.workouthours ?? '';
+            document.getElementById('agenda').value = data.agenda ?? '';
+            document.getElementById('journal').value = data.journal ?? '';
+            document.getElementById('thankful').value = data.thankful ?? '';
+            document.getElementById('lessons').value = data.lessons ?? '';
+            document.getElementById('sucked').value = data.sucked ?? '';
+            document.getElementById('improvement').value = data.improvement ?? '';
+            document.getElementById('accomplishments').value = data.accomplishments ?? '';
+            document.getElementById('screenTime').value = data.screenTime ?? '';
+        } else {
+            console.log("No data found for this date.");
+            alert("No data found for this date.");
+
+            document.getElementById('calories').value = '';
+            document.getElementById('sleep').value = '';
+            document.getElementById('sleepStart').value = '';
+            document.getElementById('sleepEnd').value = '';
+            document.getElementById('medicines').value = '';
+            document.getElementById('medicinescount').value = '';
+            document.getElementById('water').value = '';
+            document.getElementById('workouthours').value = '';
+            document.getElementById('agenda').value = '';
+            document.getElementById('journal').value = '';
+            document.getElementById('thankful').value = '';
+            document.getElementById('lessons').value = '';
+            document.getElementById('sucked').value = '';
+            document.getElementById('improvement').value = '';
+            document.getElementById('accomplishments').value = '';
+            document.getElementById('screenTime').value = '';
+        }
+    } catch (error) {
+        console.error("Error loading summary:", error);
+    }
+}
+
+    function openHealthifyApp() {
+            const appUrl = 'healthify://';
+            const fallbackUrl = 'https://play.google.com/store/apps/details?id=com.healthifyme.basic';
+
+            window.location.href = appUrl;
+
+            setTimeout(function () {
+                window.location.href = fallbackUrl;
+            }, 3000);  // Fallback after 3 seconds if app doesn't open
+        }
+        
+    
+        function openFitNotes() {
+            // Try opening the app using a custom URI scheme (replace with FitNotes URI if available)
+            const appUri = 'intent://#Intent;package=com.github.jamesgay.fitnotes;end'; 
+
+            // Open the Play Store if the app isn't installed
+            const playStoreLink = 'https://play.google.com/store/apps/details?id=com.github.jamesgay.fitnotes';
+
+            // Try to open the app using the URI scheme
+            window.location.href = appUri;
+
+            // Fallback to Play Store after a delay if app isn't installed
+            setTimeout(() => {
+                window.location.href = playStoreLink;
+            }, 1000); // Wait 1 second before redirecting to Play Store
+        }
+        
+        
+
+
+
+  // Attach saveSummary and loadSummary functions to window for external access
+  window.saveSummary = saveSummary;
+  window.loadSummary = loadSummary;
+window.openFitNotes = openFitNotes;
+window.openHealthifyApp = openHealthifyApp;
+
+
+
+
+
+        // Download summary as PDF
+        // Download summary as PDF
+
+async function downloadPDF() {
+    const selectedDate = document.getElementById('date').value;
+    
+        // Check if a user is signed in
+    const user = auth.currentUser;
+
+    if (!user) {
+        console.error("No user is signed in. Cannot generate PDF.");
+        return; // Exit the function if no user is signed in
+    }
+
+    const userId = user.uid; // Retrieve the user ID
+    console.log("User ID for PDF:", userId);
+
+    
+     /* your logic to get the user ID, e.g., from Firebase Auth */
+    // Retrieve data from Firebase
+    const docRef = firebase.firestore().collection('userData').doc(userId).collection('dailySummaries').doc(selectedDate);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+        console.log('No data found for this date');
+        return;
+    }
+
+    const data = doc.data();
+    const {
+        calories,
+        habits,
+        sleep,
+        sleepStart,
+        sleepEnd,
+        medicines,
+        medicinescount,
+        workouthours,
+        water,
+        screenTime,
+        agenda,
+        journal,
+        thankful,
+        lessons,
+        sucked,
+        improvement,
+        accomplishments,
+        images // assuming images are stored in an array
+    } = data;
+
+    // Generate the PDF
+    const docPDF = new jsPDF();
+    docPDF.setFontSize(16);
+    let y = 20; // Starting Y position
+    const pageHeight = docPDF.internal.pageSize.height; // Page height
+    const pageWidth = docPDF.internal.pageSize.width; // Page width
+    const margin = 20; // Margin from left and right
+    const textWidth = pageWidth - 2 * margin; // Adjusted text width
+
+    // Helper functions for adding headings and text
+    const addHeading = (text, yPosition) => {
+        docPDF.setFontSize(14);
+        docPDF.setFont('bold');
+        docPDF.setTextColor(0, 102, 204); // Heading color
+        
+        docPDF.text(text, margin, yPosition); // Use margin for positioning
+        
+        docPDF.setTextColor(0, 0, 0); // Reset text color to black
+        docPDF.setFontSize(12); // Reset to regular size
+        return yPosition + 10; // Add spacing after heading
+    };
+
+    const addText = (text, yPosition) => {
+        const lines = docPDF.splitTextToSize(text, textWidth); // Use adjusted text width
+        lines.forEach((line) => {
+            if (yPosition >= pageHeight - margin) { // Check if new page is needed
+                docPDF.addPage();
+                yPosition = margin; // Reset position after adding new page
+                addPageNumber(docPDF.internal.getNumberOfPages());
+            }
+            docPDF.text(line, margin, yPosition); // Use margin for positioning
+            yPosition += 10; // Add spacing for each line
+        });
+        return yPosition;
+    };
+
+    const addPageNumber = (pageNum) => {
+        docPDF.setFontSize(10);
+        docPDF.text(`Page ${pageNum}`, pageWidth - margin, pageHeight - 10, { align: 'right' });
+    };
+
+    // Add content to the PDF
+    y = addHeading(`Daily Summary for ${selectedDate}`, y);
+    
+    // Add Sleep Hours
+    y = addHeading(`Sleep Hours:`, y);
+    docPDF.setFontSize(12);
+    docPDF.text(`Total Sleep Hours: ${sleep}`, 20, y);  // Total Sleep Hours
+    y += 10;
+    docPDF.text(`Sleep Start Time: ${sleepStart}`, 20, y);  // Sleep Start Time
+    y += 10;
+    docPDF.text(`Sleep End Time: ${sleepEnd}`, 20, y);  // Sleep End Time
+    y += 20;
+    
+    // Water Intake
+    y = addHeading(`Water Intake:`, y);
+    y = addText(`${water} ml`, y);
+    
+    // Today's Calories
+    y = addHeading(`Today's Calories:`, y);
+    y = addText(calories, y);
+    
+    // Today's Habits
+    y = addHeading(`Today's Habits:`, y);
+    y = addText(habits, y);
+    
+    // Medicines Taken
+    y = addHeading(`Medicines Taken:`, y);
+    y = addText(medicines, y);
+    y = addHeading(`No of Medicines Taken:`, y);
+    y = addText(medicinescount, y);
+    
+    // Screen Time
+    y = addHeading(`Screen Time:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(`${screenTime} hours`, y);
+    
+    // Duration of Workout
+    y = addHeading(`Duration of Workout`, y);
+    y = addText(workouthours, y);
+    
+    // Gather checkbox states
+    let workoutDays = '';
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        const day = checkbox.id.toUpperCase();
+        const state = checkbox.checked ? 'Completed' : 'Missed';
+        workoutDays += `${day}: ${state}\n`;
+    });
+
+    // Adding workout days status to PDF
+    docPDF.setFontSize(14);
+    docPDF.text("Workout Days:", 20, y);
+    y += 10;
+    docPDF.setFontSize(12);
+    docPDF.text(workoutDays, 20, y);
+    y += workoutDays.split("\n").length * 10; // Adjust y based on number of lines
+    
+    // Start a new page for each section
+    docPDF.addPage();
+    y = margin; // Reset y position for the new page
+    y = addHeading(`Today's Agenda:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(agenda, y);
+    
+    // Thankful For
+    y = addHeading(`Thankful For:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(thankful, y);
+    
+    // Today's Journal
+    docPDF.addPage();
+    y = margin;
+    y = addHeading(`Today's Journal:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(journal, y);
+    
+    // Today's Lessons
+    docPDF.addPage();
+    y = margin;
+    y = addHeading(`Today's Lessons:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(lessons, y);
+    
+    // Accomplishments
+    docPDF.addPage();
+    y = margin;
+    y = addHeading(`Accomplishments:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(accomplishments, y);
+    
+    // Things that Sucked
+    y = addHeading(`Things that Sucked:`, y); 
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(sucked, y);
+    
+    // Areas for Improvement
+    docPDF.addPage();
+    y = margin;
+    y = addHeading(`Areas for Improvement:`, y);
+    addPageNumber(docPDF.internal.getNumberOfPages());
+    y = addText(improvement, y);
+    
+    // Add the images
+    if (images && images.length > 0) {
+        y = addHeading(`Images for ${selectedDate}:`, y);
+        images.forEach(imageData => {
+            // Add a new page for each image
+            docPDF.addPage();
+            y = margin; // Reset position for the new page
+            
+            // Add image to PDF
+            docPDF.addImage(imageData, 'JPEG', margin, y, 90, 160); // Adjust width and height as needed
+            
+            // Update y position after adding image
+            y += 165; // Move y position down for potential future content (if needed)
+        });
+    }
+    
+    // Save the PDF
+    docPDF.save(`Daily_Summary_${selectedDate}.pdf`);
+}
+
+    
+
+  
+  
+
+
+// Save checkbox state to localStorage
+
+// Save checkbox state to Firebase
+async function saveCheckboxState() {
+    const checkboxes = {};
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        checkboxes[checkbox.id] = checkbox.checked; // Collect checkbox states
+    });
+
+    try {
+        // Save all checkbox states to Firestore under a document named "checkboxStates"
+        await setDoc(doc(db, "userData", "checkboxStates"), checkboxes);
+        console.log("Checkbox states saved to Firebase.");
+    } catch (error) {
+        console.error("Error saving checkbox states to Firebase:", error);
+    }
+}
+
+// Load checkbox state from Firebase
+async function loadCheckboxState() {
+    try {
+        const docRef = doc(db, "userData", "checkboxStates");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const savedStates = docSnap.data();
+            document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+                if (savedStates.hasOwnProperty(checkbox.id)) {
+                    checkbox.checked = savedStates[checkbox.id]; // Set checkbox state based on saved value
+                }
+            });
+            console.log("Checkbox states loaded from Firebase.");
+        } else {
+            console.log("No checkbox state data found in Firebase.");
+        }
+    } catch (error) {
+        console.error("Error loading checkbox states from Firebase:", error);
+    }
+}
+
+// Ensure that the event listeners are only added after the DOM content is fully loaded
+window.addEventListener('DOMContentLoaded', () => {
+    // Load state on page load
+    loadCheckboxState();
+
+    // Add event listeners to save state on checkbox change
+    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', saveCheckboxState);
+    });
+});
+
+
+
+  // Attach functions to `window` so they are globally accessible
+  window.saveSummary = saveSummary;
+  window.loadSummary = loadSummary;
+    window.downloadPDF = downloadPDF;
+
+
+    </script>
+    
+</body>
+</html>
