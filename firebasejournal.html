@@ -244,23 +244,33 @@ input[type="checkbox"]:checked + .circle {
     <button id="logoutButton" class="auth-button">Logout</button>
 </div>   
         
-<div>
-    <h3>Sleep Hours:</h3>
-    <input type="number" id="sleep" placeholder="Total Sleep Hours" />
-</div>
-<div>
-    <h3>Sleep Start Time:</h3>
-    <input type="time" id="sleepStart" />
-</div>
-<div>
-    <h3>Sleep End Time:</h3>
-    <input type="time" id="sleepEnd" />
-</div>
+
         <div>
             <h3>Water Intake (ml):</h3>
             <input type="number" id="water" step="0.1" />
         </div>
         
+
+
+
+<div>
+    <h3>Sleep Start Time:</h3>
+    <input type="time" id="sleepStart" onchange="calculateSleepHours()" />
+</div>
+<div>
+    <h3>Sleep End Time:</h3>
+    <input type="time" id="sleepEnd" onchange="calculateSleepHours()" />
+</div>
+
+<div>
+    <h3>Sleep Hours:</h3>
+    <input type="number" id="sleep" placeholder="Total Sleep Hours" readonly />
+</div>
+
+
+
+
+
         <div>
             <h3>Today's Calories:</h3>
             <input type="number" id="calories" />
@@ -339,6 +349,18 @@ input[type="checkbox"]:checked + .circle {
     </div>
 </div>
 
+<br>
+<br>
+
+
+<div>
+<input type="file" id="imageUpload" accept="image/*" />
+<img id="imageDisplay" style="display: none;" alt="Uploaded Image" />
+<button id="uploadImageButton">Upload Image</button>
+
+
+
+
 
 
 
@@ -356,6 +378,8 @@ input[type="checkbox"]:checked + .circle {
         </div>
         
 
+    
+    
     
   
         
@@ -407,19 +431,7 @@ What mistakes did I make today, and what can I learn from them?"
         </div>
       
 
-<label for="fileInput" style="background-color: black; color: white; border: 1px solid #ccc; padding: 9px 14px ; font-size: 9px; cursor: pointer; display: inline-block; border-radius: 5px;">
-    Import Summary
-</label>
 
-<!-- Hidden input file element -->
-<input type="file" id="fileInput" accept=".json" onchange="importSummary(event)" style="display: none;" />
-
-
-  
-   <button onclick="exportSummary()" style="background-color: black; color: white; border: 1px solid #ccc; padding: 8px 8px; font-size: 10px; cursor: pointer; display: inline-block;">
-    Export Summary
-</button>
-        <br>
         
 <button onclick="saveSummary()">Save Summary</button>
 <button onclick="downloadPDF()">Download PDF</button>
@@ -634,6 +646,9 @@ async function saveSummary() {
 
     const selectedDate = document.getElementById('date').value;
     console.log('Selected Date for Saving:', selectedDate);
+    
+    
+    
 
     const summaryData = {
         calories: document.getElementById('calories').value,
@@ -769,6 +784,25 @@ async function loadSummary() {
   window.loadSummary = loadSummary;
 window.openFitNotes = openFitNotes;
 window.openHealthifyApp = openHealthifyApp;
+window.uploadImage = uploadImage;
+
+async function uploadImage(file) {
+    const user = auth.currentUser; // Get current user
+    if (!user) {
+        console.error("User not authenticated.");
+        return null; // Return if user is not logged in
+    }
+
+    const storageRef = ref(storage, `images/${user.uid}/${file.name}`); // Define the storage path
+    try {
+        await uploadBytes(storageRef, file); // Upload the file
+        const downloadURL = await getDownloadURL(storageRef); // Get the file's download URL
+        return downloadURL; // Return the URL for saving to Firestore
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        return null; // Return null in case of error
+    }
+}
 
 
 
@@ -994,55 +1028,6 @@ async function downloadPDF() {
 
 // Save checkbox state to localStorage
 
-// Save checkbox state to Firebase
-async function saveCheckboxState() {
-    const checkboxes = {};
-    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
-        checkboxes[checkbox.id] = checkbox.checked; // Collect checkbox states
-    });
-
-    try {
-        // Save all checkbox states to Firestore under a document named "checkboxStates"
-        await setDoc(doc(db, "userData", "checkboxStates"), checkboxes);
-        console.log("Checkbox states saved to Firebase.");
-    } catch (error) {
-        console.error("Error saving checkbox states to Firebase:", error);
-    }
-}
-
-// Load checkbox state from Firebase
-async function loadCheckboxState() {
-    try {
-        const docRef = doc(db, "userData", "checkboxStates");
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            const savedStates = docSnap.data();
-            document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
-                if (savedStates.hasOwnProperty(checkbox.id)) {
-                    checkbox.checked = savedStates[checkbox.id]; // Set checkbox state based on saved value
-                }
-            });
-            console.log("Checkbox states loaded from Firebase.");
-        } else {
-            console.log("No checkbox state data found in Firebase.");
-        }
-    } catch (error) {
-        console.error("Error loading checkbox states from Firebase:", error);
-    }
-}
-
-// Ensure that the event listeners are only added after the DOM content is fully loaded
-window.addEventListener('DOMContentLoaded', () => {
-    // Load state on page load
-    loadCheckboxState();
-
-    // Add event listeners to save state on checkbox change
-    document.querySelectorAll('.day-checkboxes input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', saveCheckboxState);
-    });
-});
-
 
 
   // Attach functions to `window` so they are globally accessible
@@ -1052,6 +1037,28 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     </script>
+    
+    <script>
+function calculateSleepHours() {
+    const sleepStart = document.getElementById("sleepStart").value;
+    const sleepEnd = document.getElementById("sleepEnd").value;
+    const sleepInput = document.getElementById("sleep");
+
+    if (sleepStart && sleepEnd) {
+        const start = new Date(`1970-01-01T${sleepStart}:00`);
+        const end = new Date(`1970-01-01T${sleepEnd}:00`);
+
+        let diff = (end - start) / (1000 * 60 * 60); // difference in hours
+
+        if (diff < 0) {
+            diff += 24; // handle cases where sleep time goes past midnight
+        }
+
+        sleepInput.value = diff.toFixed(2); // set the result in the sleep input
+    }
+}
+</script>
+    
     
 </body>
 </html>
