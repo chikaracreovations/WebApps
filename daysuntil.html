@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life in Weeks</title>
+  <link rel="stylesheet" href="styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+ <!-- Background Music -->
+  <audio id="background-music" autoplay loop>
+    <source src="images/wolf.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio> 
+  
+  <!-- Audio Elements -->
+<audio id="sound1" src="images/heartbeat.mp3" preload="auto"></audio>
+  
+  <!-- Add a button to start the music -->
+<button id="play-music-button">Start Background Music</button>
+
+
+  
+  <div class="container">
+    <h1>Your Life in Weeks</h1>
+    <h2>See your life as a chart, week by week, and understand how precious time really is.</h2>
+    
+
+    
+      <!-- Inspirational Quotes Section -->
+<div id="quotes-section" class="quotes-section">
+  <p2 id="quote">"Time flies, but you are the pilot."</p2>
+</div>
+  
+   <br>
+   
+   
+    
+    <div class="input-section">
+      <label for="birthday">Enter your birthdate:</label>
+     
+      <br>
+      <br>
+      
+      <input type="date" id="birthday"/>
+      <button id ="heartbeat" onclick="generateLifeChart()">Generate Chart</button>
+          <p>Each box represents a week in an average 90-year lifespan.</p>
+    
+      
+    </div>
+    <div class="death-date">
+      <strong>Estimated Death Date:</strong> 
+    <span id="death-date"></span>
+   
+    </div>
+    <div id="week-count"></div>
+    <div id="chart" class="chart"></div>
+    <br>
+    
+<!-- Button to Download Image -->
+<button2 id="download-image">Download Chart as Image</button2>
+
+<div class="ghost" id="ghost"></div>
+
+
+<div 
+
+
+  
+    <div class="fun-elements">
+      <br>
+      <br>
+      
+      <p>Every breath you take is one less you’ll ever have 🪦</p>
+      <p>  So live fully & make it count! 🕰</p>
+    </div>
+  </div> 
+  
+  <script src="script.js"></script>
+</body>
+</html>
+
