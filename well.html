@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Wishing Well Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+body {
+    background: url('well.jpg') no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed; /* Ensures the background stays fixed while content scrolls */
+    background-position: center; /* Keeps the background centered */
+    text-align: center;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+        h2 {
+            color: white;
+            margin-top: 10px;
+        }
+        
+        p {
+          color:white;
+         margin-top: 150px;
+         background-color:black;
+         opacity:0.7;
+        }
+        
+        p2 {
+          color:white;
+         background-color:black;
+         opacity:0.7;
+         margin-top:100px;
+          
+        }
+
+        #wish-input {
+            width: 90%;
+            padding: 10px;
+            margin: 20px 0;
+            font-size: 18px;
+            border-radius:40px;
+            opacity:0.8;
+            color:white;
+           background-color:black;
+        }
+
+        #coin {
+            width: 50px;
+            height: 50px;
+            background: gold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 50px;
+            position: relative;
+            margin: 20px auto;
+            transition: transform 1.5s ease-in-out;
+        }
+
+        @keyframes dropCoin {
+            0% { top: 0; opacity: 1; }
+            100% { top: 300px; opacity: 0; }
+        }
+
+        .fall {
+            animation: dropCoin 1s forwards;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Make a Wish and Let the Magic Unfold</h2>
+
+
+    <!-- Input for Wish -->
+    <textarea id="wish-input" placeholder="Enter your wish here...and press the coin"></textarea>
+
+    <div id="coin" onclick="dropCoin()">🪙</div>
+  
+    
+    
+
+  
+    <p>At the Wishing Well, every wish holds a spark of possibility. When you make your wish, you're sending your hopes into the universe, trusting that dreams can come true.</p>
+
+<p2>Who knows what might happen when you drop your coin — but be careful, for the well has a mind of its own. Your wish may just come true... or something else entirely.</p2>
+<br>
+
+<p2> We believe in the power of positivity or Perhaps a witch watches over this well, knowing the secrets of the universe waiting to grant your heart's deepest desire.
+
+  Who knows what magic awaits?
+
+  The Wishing Well holds many secrets, and yours could be one of them.</p2>
+
+    <!-- Add Coin Drop Sound -->
+    <audio id="coin-sound">
+        <source src="coin.mp3" type="audio/mpeg">
+    </audio>
+
+    <script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+    // Firebase setup
+    const firebaseConfig = {
+        apiKey: "AIzaSyCiQsm5ARzxpkVmxWyKQlYAkso8zIdYxO8",
+        authDomain: "the-demo-store.firebaseapp.com",
+        projectId: "the-demo-store",
+        storageBucket: "the-demo-store.firebasestorage.app",
+        messagingSenderId: "41447504329",
+        appId: "1:41447504329:web:0af0c1ece41c0aa8971018",
+        measurementId: "G-HCMES5GED4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Function to handle the coin drop action
+    async function dropCoin() {
+        var coin = document.getElementById('coin');
+        var coinSound = document.getElementById('coin-sound');
+        var wishInput = document.getElementById('wish-input').value.trim();
+
+        // Check if wish input is empty
+        if (!wishInput) {
+            alert("Please enter a wish before dropping the coin.");
+            return; // Stop further execution if wish is empty
+        }
+
+        coin.classList.add('fall');
+
+        // Play sound effect
+        coinSound.currentTime = 0; // Restart sound in case it was played before
+        coinSound.play();
+
+        // Stop the sound after 2 seconds
+        setTimeout(() => {
+            coinSound.pause();
+            coinSound.currentTime = 0; // Reset to start
+        }, 1000);
+
+        setTimeout(() => {
+            openPayment();
+            saveWish(wishInput); // Save the wish to Firebase
+            coin.classList.remove('fall');
+        }, 1200);
+    }
+
+    var options = {
+    "key": "rzp_live_FwIm6UiuYORW1Z",
+    "amount": "100", // Amount in paise
+    "currency": "INR",
+    "name": "Wishing Well",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "handler": function(response) {
+        window.location.href = "confirmation2.html?status=success";
+    },
+    "prefill": {
+        "name": "User",
+        "email": "user@example.com",
+        "contact": "9000000000"
+    },
+    "theme": { "color": "#3399cc" },
+    "modal": {
+        "ondismiss": function() {
+            window.location.href = "confirmation2.html?status=failure";
+        }
+    }
+};
+
+function openPayment() {
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+    // Function to save wish to Firebase
+    async function saveWish(wish) {
+        if (wish.trim() === "") {
+            alert("Please enter a wish.");
+            return;
+        }
+
+        try {
+            const docRef = await addDoc(collection(db, "wishes"), {
+                wish: wish,
+                timestamp: new Date()
+            });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
+
+    // Make the functions global
+    window.saveWish = saveWish;
+    window.dropCoin = dropCoin;
+</script>
+
+</body>
+</html>
